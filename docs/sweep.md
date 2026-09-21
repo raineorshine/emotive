@@ -75,6 +75,20 @@ cut and are the most valuable lines in the file.
 
 Name them in the sweep's prompt so they survive, and check they did afterwards.
 
+## The target's commit message is the only durable record
+
+A sweep edits repos the user did not name, for a reason that lives in this repo. The
+session that ran it holds that reason and then ends; what survives is each target's
+`git log`, read months later by someone with no session context and no memory of
+agreeing to it. So every sweep commit states the cause in its own body — the glossary
+now arrives from the plugin's hook, which is why these rows went — rather than
+describing only what was cut.
+
+The same goes for the session's own report while it runs. Over a long session the
+reason and the acts drift apart, and "six repos were edited" stops being traceable to
+the one decision that authorized it. Name the cause again in each report, even when it
+was settled earlier.
+
 ## Check the result, not the report
 
 Per repo, after it finishes: the row grep above returns nothing, the hazard
