@@ -59,23 +59,11 @@ next. `~/projects/karabiner/docs/workflow.md` holds the original reasoning.
 Adding a row costs a line in every project and nothing else, since an unused row
 is inert by design. Changing or removing one costs a sweep.
 
-A sweep is prose work, not a `sed`. The copies diverged in style — backticked
-prefixes or bare, aligned tables or compact — and they are not all in `AGENTS.md`:
-`karabiner` keeps the whole thing in `docs/workflow.md`, and `regard` splits the
-table from its edges across both. Grep for a prefix character to find them, not
-for a heading, and read each hit in place: the wording that surrounds a prefix is
-ordinary prose elsewhere in those files, and a phrase swapped blind corrupts a
-paragraph that was never about session titles.
-
-One wording rule holds across them: a prefix is **set in the response that enters
-the stage**. Every setter is an agent, so a phrase like "by hand" reads as
-something the user does; the distinction worth drawing is whether a skill owns the
-stage and re-reads it each run, or a response sets it inline from an instruction it
-has to remember.
-
-Commit subjects differ per repo, and a sweep is the one change that touches all of
-them: `docs:` in `axshot`, `blunt`, `github-triage` and `regard`; plain
-sentence-case in `a-thousand-worlds`, `email-filter-builder` and `karabiner`.
+Say a prefix is **set in the response that enters the stage** — never "by hand",
+which reads as something the user does when every setter is an agent. The
+distinction the wording has to carry is whether a skill owns the stage and
+re-reads it each run, or a response sets it inline from an instruction it has to
+remember.
 
 ## Evaluating a change
 
