@@ -38,14 +38,20 @@ These are **stages, not flags**: exactly one prefix at a time, and setting a new
 whatever was there — only one reads cleanly at sidebar width, and `🚀 ` after `📦 ` is noise, since
 the later stage implies the earlier. **Every title carries one**, and a prefix comes off only when
 another takes its place: a bare title says nothing about the session, and the sidebar cannot tell it
-apart from a chat that never had a stage at all. A session with nothing left to do keeps the prefix
-of the last stage it reached. The harness names a session, so every session starts without a prefix:
-putting the first one on that inherited title is part of the first response, not something to wait
-for a stage change to prompt.
+apart from a chat that never had a stage at all. A session with nothing left to do rests at the
+stage it ended in, never at one that names work in flight. The harness names a session, so every
+session starts without a prefix: putting the first one on that inherited title is part of the first
+response, not something to wait for a stage change to prompt.
 
 Set a prefix **optimistically** — when the stage _starts_, not when it succeeds — and correct it if
 the stage falls over. A title that only becomes true at the end is blank for the whole stretch the
 sidebar is there to describe.
+
+**A prefix has to still be true once the response ends.** Optimistic setting covers the stretch while
+the response is being written; the sidebar is read *between* turns, when nothing is running. So a
+response that finishes what it was doing moves the prefix on before it ends — `📦 ` when the work is
+gated and shippable, `🚙 ` when it closes on something for the user, `🪦 ` when it is abandoned.
+`⏳ ` is never what a session rests at: it names work in flight, and between turns there is none.
 
 **`🚀 ` is the exception, because it names a result and not a stage.** It goes on when the push
 lands and never before, so a ship that is rebasing, re-testing or retrying a rejected push still
