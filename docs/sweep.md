@@ -47,12 +47,22 @@ Every one of the four had unpushed commits on `main`, and one had diverged
 - A rebase may drop local commits that reached the remote by another route. Three
   local commits becoming one is a normal outcome, not a loss.
 
-## Parallel is safe here, unlike concurrent ships
+## Parallel, but only without `--ask`
 
-Sibling repos are independent, so the sweeps run at once with nothing to
-coordinate — which is the opposite of two sessions shipping the same repo, where
-the version number collides (see AGENTS.md → Shipping while another session is
-shipping). One background session per repo.
+Sibling repos are independent, so sweeps run at once with nothing to coordinate —
+the opposite of two sessions shipping the same repo, where the version number
+collides (see AGENTS.md → Shipping while another session is shipping). One
+background session per repo, and four at once was fine.
+
+**`--ask` cannot be backgrounded at all.** The dialog has to reach the user, and a
+headless session has nobody to answer it, so an asking sweep runs from the session
+the user is talking to — serially, one repo at a time. `AskUserQuestion` caps a
+call at four questions and the ask is three, so it is one dialog per repo rather
+than one for the batch.
+
+Driving it from elsewhere means the skill's step 0 retitles the *driving* session,
+not the target. That prefix is the driving session's own stage; it is not a preview
+of what the target chose.
 
 ## The hazard paragraph is what a sweep is most likely to destroy
 

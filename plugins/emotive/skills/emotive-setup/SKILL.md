@@ -115,6 +115,11 @@ the dialog a lie.
 is what `template.md` asks for in a repo with nothing to warn about. An empty answer to all three is
 a refusal: nothing is installed, no file is touched, and the response says so in a line.
 
+**An option left unchecked is not written**, however good the case for it looked while the options
+were being drafted. Offering one and then installing it anyway is the same defect as offering one a
+skill already overrides — the dialog stops being the thing that decided. Where leaving it out costs
+the repo something, say so in the report rather than in the file.
+
 Where there is nothing to choose between — one candidate and no ambiguity — write it and do not ask
 about it. A dialog whose every question has one option is a confirmation prompt, not a choice.
 
