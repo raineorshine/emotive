@@ -29,7 +29,14 @@ packaging.
 3. Bump the minor version in `plugins/emotive/.claude-plugin/plugin.json`
    for anything that should ship. Without a bump, `claude plugin update` reports
    "already at the latest version" even when `main` has new commits. `/ship`
-   does this.
+   does this. A change entirely outside `plugins/` — this file, the README, the
+   repo's own skills — ships to nobody, so it lands without a bump and without a
+   tag.
+
+The local install is a symlink: `~/.claude/skills/emotive-setup` points at
+`plugins/emotive/skills/emotive-setup`, so an edit here is live in the next
+session with no build or install step. Installing the plugin on this machine too
+would list the skill twice.
 
 Landing that bump on `main` tags the release from CI. Never tag by hand: a cloud
 session cannot push `refs/tags/*` at all, so a tag step in the local workflow is
@@ -51,6 +58,24 @@ next. `~/projects/karabiner/docs/workflow.md` holds the original reasoning.
 
 Adding a row costs a line in every project and nothing else, since an unused row
 is inert by design. Changing or removing one costs a sweep.
+
+A sweep is prose work, not a `sed`. The copies diverged in style — backticked
+prefixes or bare, aligned tables or compact — and they are not all in `AGENTS.md`:
+`karabiner` keeps the whole thing in `docs/workflow.md`, and `regard` splits the
+table from its edges across both. Grep for a prefix character to find them, not
+for a heading. Read every hit before replacing a phrase, too: "by hand" appears a
+dozen times across those repos meaning a person really does it — tagging a
+release, granting a permission, copying a bundle over — where the same words about
+a title mean an agent's own `set_session_title` call.
+
+Which is the wording rule itself: a prefix is **set in the response that enters
+the stage**, never "by hand". Every setter is an agent, and the distinction worth
+drawing is whether a skill owns the stage and re-reads it each run, or a response
+sets it inline from an instruction it has to remember.
+
+Commit subjects differ per repo, and a sweep is the one change that touches all of
+them: `docs:` in `axshot`, `blunt`, `github-triage` and `regard`; plain
+sentence-case in `a-thousand-worlds`, `email-filter-builder` and `karabiner`.
 
 ## Evaluating a change
 
