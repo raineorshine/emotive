@@ -164,11 +164,12 @@ is blank for the whole stretch the sidebar is there to describe. `🚀 ` is set 
 `/ship` as its first step, before `./build.sh`, and `/ship` puts back what is
 true instead if the ship does not land — `📦 ` for a branch that built clean,
 `⏳ ` if the work goes back to implementing, `🚙 ` if it is waiting on the user —
-so it stays true on its own. `📚 ` goes on in the response that invokes `learn`,
-before anything is read: the `learn` here is the user-level skill, and it does
-not set a session title itself. The rest are set in the response that enters the
-stage (`mcp__ccd_session_mgmt__set_session_title`), and nothing reconciles a
-title against reality: an abandoned session keeps whatever prefix it had.
+so it stays true on its own. `📚 ` goes on in the response that starts
+extracting the session's learnings, before anything is read: whatever carries
+out the extraction will not set a title itself. The rest are set in the response
+that enters the stage (`mcp__ccd_session_mgmt__set_session_title`), and nothing
+reconciles a title against reality: an abandoned session keeps whatever prefix
+it had.
 
 **Ask which session this is before renaming one.** `get_session "self"` is the
 only answer, and it changes under a fork: a forked session carries the whole

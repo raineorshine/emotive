@@ -35,7 +35,7 @@ settles the wording before the workflow that needs it arrives.
 | `🚙 `  | parked: the work is sound and waiting on the user                 | the response that hands back                               |
 | `⏲️ `   | waiting on a task scheduled for later                             | the response                                               |
 | `🪦 `  | dead end — kept for the findings, not to resume                   | the response                                               |
-| `📚 `  | extracting learnings into the instruction files                   | the response that invokes `learn`                          |
+| `📚 `  | extracting learnings into the instruction files                   | the response that starts the extraction                    |
 
 Precedence, when two could apply: a hazard (`💾 `, `🔍 `, `🔒 `) outranks a park, because the
 warning to other sessions comes before the one to the user, who is already reading the response.
@@ -111,9 +111,9 @@ and the row says so instead.
 - **The skill that takes a lock**, where there is one — `🔓 ` before the acquire, `🔒 ` once it
   reports acquired, `🔓 ` before the release, then `📦 ` or whatever stage the branch actually
   reached. Each with "do not report this".
-- **`learn`** — the repo's `learn` is usually the user-level one, which this skill does not touch.
-  So the instructions carry the rule instead: `📚 ` goes on in the response that invokes `learn`,
-  before anything is read. Say in the instructions that the skill does not set it itself.
+- **Extracting learnings** — whatever does it here usually lives outside the repo, so there is
+  nothing to wire. The instructions carry the rule instead: `📚 ` goes on in the response that
+  starts the extraction, before anything is read. Say in the instructions that nothing else sets it.
 
 Where a repo's skill already sets a prefix, keep the emoji it uses and make the instructions match
 the skill — the skill is the thing that runs.
