@@ -43,6 +43,7 @@ for row in rows:
     for i, cell in enumerate(row):
         for k, v in GENERIC.items():
             row[i] = row[i].replace(k, v)
+listed = [re.search(r"`([^`]+)`", row[0]).group(1).strip() for row in rows]
 # The template code-formats the prefix to keep its trailing space visible, which
 # is what a session setting one needs; the README shows the bare emoji instead.
 for row in rows:
@@ -67,7 +68,6 @@ ilines = INTERACTIVE.read_text().split("\n")
 istart = next(i for i, l in enumerate(ilines) if l.startswith("| Question"))
 iend = next(i for i in range(istart, len(ilines)) if not ilines[i].startswith("|"))
 asked = [m.strip() for l in ilines[istart + 2:iend] for m in re.findall(r"`([^`]+)`", l.split("|")[2])]
-listed = [re.search(r"`([^`]+)`", r[0]).group(1).strip() for r in rows]
 if sorted(asked) != sorted(listed):
     missing = [p for p in listed if p not in asked]
     extra = [p for p in asked if p not in listed]

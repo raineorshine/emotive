@@ -70,6 +70,12 @@ character before it, so a markdown table padded by character count comes out
 ragged. `build.sh` pads the generated glossary by display width; a table written
 by hand here needs the same arithmetic, or prettier's.
 
+`build.sh` mutates its parsed rows as it goes — the prefix cell loses its
+backticks and trailing space on the way to the README — so a check that needs
+the template's own spelling of a prefix has to read it before that strip, not
+after. The interactive skill's coverage check landed after it and matched
+nothing.
+
 The README shows a prefix as a bare emoji — 📚, never `📚 `. The code formatting
 and the trailing space belong to `template.md`, where a session reading it is
 about to set a title; `build.sh` strips them from the generated table, and prose
