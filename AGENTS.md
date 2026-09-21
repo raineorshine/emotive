@@ -38,6 +38,12 @@ everybody unresolved. The test for the first half: would this sentence read the
 same in a repo you have never seen? If a rule bound for the shipped convention names
 a command, a branch or a resource, it belongs in `template.md`.
 
+**`docs/` does not ship.** An install delivers `plugins/emotive/` alone, so a rule
+kept only in a doc is invisible to the session running the skill — which is how
+`SKILL.md` came to tell a sweep to run the target's gate while `docs/sweep.md`
+forbade it. Where a doc overrides a shipped step, the override belongs in the step;
+the doc keeps the reasoning.
+
 Asking is a branch inside `SKILL.md`, reached by `--ask`, not a second skill
 deferring to the first: two documents describing one procedure have to be kept
 agreeing, and that agreement is not checkable. As a branch, a change to a step is
