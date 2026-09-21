@@ -17,7 +17,11 @@ Run the whole sequence unattended. Never stop and ask the user to merge, tag, or
 3. `git fetch origin && git rebase origin/main` — resolve any conflicts, then run
    `./build.sh` again. A clean rebase still moves the files the build parses, so a
    check this branch added can meet a format `main` changed under it.
-4. Bump the minor version in `plugins/emotive/.claude-plugin/plugin.json`, **after**
+4. Bump the minor version in `plugins/emotive/.claude-plugin/plugin.json` — unless the
+   ship touches nothing under `plugins/emotive/`, in which case skip this step and
+   steps 7 and 8, and say the ship carried no release. An install delivers that
+   directory alone, so a bump there would announce an update that changes nothing
+   installed. Bump **after**
    the rebase and off `git show origin/main:plugins/emotive/.claude-plugin/plugin.json`
    — not off the working tree, which an abandoned earlier attempt may already have
    bumped, giving a double increment. Then commit the bump. Bumping
