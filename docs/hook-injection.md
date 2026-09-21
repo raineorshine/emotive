@@ -17,6 +17,10 @@ This is the shape `blunt` has shipped for 35 minor versions
 (`~/projects/blunt/plugins/blunt/hooks/hooks.json`); emotive copied it rather
 than inventing one.
 
+The published hooks reference states that `SessionStart` cannot add context to the
+conversation. A running session contradicts it, so do not settle that question by
+reading the docs.
+
 ## The trap: `additionalContext` is dropped for plugins
 
 A hook may instead emit JSON with
@@ -32,23 +36,6 @@ logs as a success, and reaches nobody.
 
 [16538]: https://github.com/anthropics/claude-code/issues/16538
 [88086]: https://github.com/anthropics/claude-code/issues/88086
-
-## Verifying it, since the docs are wrong here
-
-The published hooks reference states that `SessionStart` cannot add context to the
-conversation. That is contradicted by a running session, so do not settle this
-question by reading either the docs or the file.
-
-Verify by A/B instead:
-
-```sh
-claude --plugin-dir plugins/emotive -p 'Quote the glossary row for the rocket prefix.'
-claude -p 'Quote the glossary row for the rocket prefix.'
-```
-
-The first quotes the row; the second has nothing to quote. A run with the flag and
-a run without differ by exactly the plugin, so anything else that changed is not
-the hook.
 
 ## Rejected alternatives
 

@@ -152,9 +152,10 @@ for the prefix characters rather than trusting prose about which skill sets
 what — the prose goes stale and the skill is what runs.
 
 For the injected half, `claude --plugin-dir plugins/emotive` loads the working
-tree for one session, so a run with the flag and a run without differ by exactly
-that. Read what the session actually did with its title, not what the file says
-it should have — the published hooks reference is wrong about whether
+tree for one session. The installed plugin loads as well, so a run without the
+flag is no control — verify an edit by making its wording distinctive and checking
+that wording arrives. Read what the session actually did with its title, not what
+the file says it should have — the published hooks reference is wrong about whether
 `SessionStart` can inject at all, so neither it nor the file settles the question.
 [docs/hook-injection.md](docs/hook-injection.md) has the mechanism, the
 `additionalContext` trap that fails silently, and the alternatives already
