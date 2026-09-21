@@ -19,6 +19,7 @@ and the prefix changes its own skills have to set. Everything else is packaging.
 | `plugins/emotive/.claude-plugin/plugin.json` | version; gates `claude plugin update` |
 | `.claude-plugin/marketplace.json` | the marketplace listing that serves the plugin |
 | `docs/hook-injection.md` | how the injection works, what is broken about it, what was rejected |
+| `docs/sweep.md` | running the sweep against a sibling repo, and what it can destroy |
 | `build.sh` | normalizes the glossary table and copies it into the README |
 | `.github/workflows/tag-release.yml` | tags `v<version>` when a bump lands on `main` |
 
@@ -47,11 +48,10 @@ and the prefix changes its own skills have to set. Everything else is packaging.
    update that changes nothing installed. The README still goes public on `main`.
 
 This machine runs the installed plugin, not a symlink into the repo, so an edit
-here is not live until `/ship` lands it and `claude plugin update` fetches it. To
-try one before it ships, `claude --plugin-dir plugins/emotive` loads the working
-tree for a single session. Never a symlink *and* the plugin — see
-[docs/hook-injection.md](docs/hook-injection.md) for why the symlink alone is the
-one broken combination.
+here is not live until `/ship` lands it and `claude plugin update` fetches it.
+`claude --plugin-dir plugins/emotive` loads the working tree for one session to
+try it first. Never a symlink *and* the plugin — see
+[docs/hook-injection.md](docs/hook-injection.md) for the one broken combination.
 
 Landing that bump on `main` tags the release from CI. Never tag by hand: a cloud
 session cannot push `refs/tags/*` at all, so a tag step in the local workflow is
@@ -63,24 +63,21 @@ character before it, so a table padded by character count comes out ragged.
 neither is ever typed; a table written by hand elsewhere needs the same
 arithmetic, or prettier's.
 
-The README shows a prefix as a bare emoji — 📚, never `📚 `. The backticks and the
-trailing space belong to `context/session-titles.md`, where a session reading it
-is about to set a title. `build.sh` therefore keeps two row lists — the parsed
-ones and the stripped ones — padded separately; a check wanting the source's own
-spelling must read the unmutated list, which is what an earlier coverage check got
-wrong when it matched nothing. README prose follows the bare-emoji rule too.
+The README shows a prefix as a bare emoji — 📚, never `📚 `; the backticks and the
+trailing space belong to `context/session-titles.md`, where a session reading it is
+about to set a title. `build.sh` keeps two row lists for that, parsed and stripped,
+padded separately — a check wanting the source's own spelling must read the
+unmutated one, which an earlier coverage check got wrong and matched nothing.
 
-`AskUserQuestion` caps a question at four options and a call at four, so a wide
-ask is grouped `multiSelect` questions in one call — one dialog, not three
-interruptions.
+`AskUserQuestion` caps a question at four options and a call at four, so a wide ask
+is grouped `multiSelect` questions in one call — one dialog, not three interruptions.
 
-**A project adopting this convention has no emoji in it yet.** So nothing the
-install decides can come from grepping a repo for prefix characters — on a first
-install that grep is empty by definition, and an empty result must never read as
-an answer. Candidates come from what the repo contains: its scripts, its skill
-files, its `package.json`, its CI config. The prefix grep has one job,
-reconciling a repo that has already adopted the convention, and finding nothing
-is its normal result.
+**A project adopting this convention has no emoji in it yet**, so nothing the
+install decides can come from grepping a repo for prefix characters — that grep is
+empty by definition on a first install, and empty must never read as an answer.
+Candidates come from what the repo contains: its scripts, skill files,
+`package.json`, CI config. The grep has one job, reconciling a repo that already
+adopted the convention.
 
 ## The vocabulary is shared, not invented here
 
@@ -92,7 +89,10 @@ and `blunt`, whose `AGENTS.md` files still hold field copies.
 Those copies are what the hook makes unnecessary, and the sweep is a subtraction,
 not a rewrite: cut the rows and the generic prose, keep only what answers the repo.
 Until a repo is swept it carries the glossary twice, which costs tokens but
-conflicts with nothing.
+conflicts with nothing. **Never run the target's own `ship` skill for a sweep** —
+a sibling's gates install apps and drive the real keyboard, which is not what a
+docs-only change should cost. [docs/sweep.md](docs/sweep.md) has that and the rest
+of the procedure.
 
 Once swept, changing the meaning of a prefix costs one edit here instead of a
 pass over every repo. That is the whole reason the glossary moved into a hook.
@@ -121,10 +121,9 @@ same in any project.
 
 Nothing locks `main`, and two sessions in two worktrees can reach `/ship` at once. The
 failure is not the conflict, which git refuses safely; it is the **version number**. A bump
-chosen before the rebase is a bump off a stale `main`, and if the other session lands
-first, its tag already holds that number. Derive it from
-`git show origin/main:…plugin.json` after the rebase — not from the working tree, which an
-abandoned attempt may have bumped already. `/ship` does it in that order.
+chosen before the rebase is off a stale `main`, and if the other session lands first its tag
+already holds that number. Derive it from `git show origin/main:…plugin.json` after the
+rebase — not from the working tree, which an abandoned attempt may have bumped already.
 
 `main` also moves *during* a resolve, so re-check immediately before the push. Four rebases
 in one ship is a normal day when another session is active, and each is cheap; a
