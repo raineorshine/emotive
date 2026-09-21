@@ -116,6 +116,14 @@ repo is wrong.
 Conventional-commit subjects (`docs:`, `feat:`, `fix:`), matching the history. Work
 happens on a branch in a worktree and lands on `main`; `/ship` is that procedure.
 
+A session that arrived here mid-session — started on no folder, or moved in with
+`change_directory` — never registered this repo's `.claude/skills`, so `/ship` and
+`/update` answer "Unknown skill" for the rest of its life. The files are committed and
+present in every worktree; it is the skill list that is stale, not the checkout. Run the
+steps out of `.claude/skills/ship/SKILL.md` directly rather than reading the failure as a
+missing or gitignored skill — and re-read that file each time, since it is the procedure,
+not a description of one.
+
 ## Reporting
 
 Never suggest restarting Claude Code. After `/ship`, end on the last bullet — no
