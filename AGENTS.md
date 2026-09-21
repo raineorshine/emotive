@@ -4,10 +4,9 @@ Emotive: a session-title status convention for Claude Code, shipped as a plugin
 named `emotive`. The product is in two halves. The **glossary** —
 `context/session-titles.md` — is injected into every session by a `SessionStart`
 hook, so it needs no install and is identical everywhere. The **wiring** — the
-`emotive-setup` skill, with `emotive-setup-interactive` as a front door onto the
-same procedure — installs only what a hook cannot know: what a row means in one
-particular repo, and the prefix changes its own skills have to set. Everything
-else is packaging.
+`emotive-setup` skill, which asks rather than infers when passed `--ask` —
+installs only what a hook cannot know: what a row means in one particular repo,
+and the prefix changes its own skills have to set. Everything else is packaging.
 
 The split is the whole design. A rule that reads the same in every repo goes in
 the injected half, where one edit reaches every session. A rule made of a repo's
@@ -20,7 +19,6 @@ own commands goes in the skill's half, where it is written into that repo once.
 | `plugins/emotive/context/session-titles.md` | the glossary — the actual product, injected into every session |
 | `plugins/emotive/hooks/hooks.json` | `SessionStart` hook that cats it into context |
 | `plugins/emotive/skills/emotive-setup/SKILL.md` | the wiring procedure — what the skill does when it runs |
-| `plugins/emotive/skills/emotive-setup-interactive/SKILL.md` | the same wiring, with the local half asked rather than inferred |
 | `plugins/emotive/skills/emotive-setup/template.md` | the shape of the local half: what lands in one repo's instructions |
 | `plugins/emotive/.claude-plugin/plugin.json` | version; gates `claude plugin update` |
 | `.claude-plugin/marketplace.json` | the marketplace listing that serves the plugin |
@@ -33,12 +31,11 @@ own commands goes in the skill's half, where it is written into that repo once.
    the rows, and every rule that is true regardless of repo. `SKILL.md` holds
    what an installing session does. `template.md` holds the shape of what lands
    in one repo's instructions. A rule in the wrong half either reaches nobody or
-   reaches everybody unresolved. `emotive-setup-interactive/SKILL.md` is a fourth
-   file and takes only what is different about asking — it defers to
-   `emotive-setup` for the procedure, so a rule belonging to the install itself
-   goes there and is inherited. Two copies of a step is the failure mode; the
-   interactive skill is a diff. What it may ask about is bounded: the local half,
-   never the glossary, which no skill installs and so no skill can subset.
+   reaches everybody unresolved. Asking is a branch inside `SKILL.md`, reached by
+   `--ask`, not a second skill deferring to the first: two documents describing one
+   procedure have to be kept agreeing, and that agreement is not checkable. As a
+   branch, a change to a step is one edit. What the ask may cover is bounded to the
+   local half, never the glossary, which no skill installs and so none can subset.
 2. Run `./build.sh` — it re-pads the glossary in `context/session-titles.md` and
    copies it into the README between `glossary:begin` / `glossary:end` markers.
    Never hand-edit that block; it will be overwritten. The build fails on a
@@ -92,6 +89,14 @@ follows the same rule.
 so a wide ask is grouped `multiSelect` questions in a single call. One call
 renders as one dialog; three calls would be three interruptions.
 
+**A project adopting this convention has no emoji in it yet.** So nothing the
+install decides can come from grepping a repo for prefix characters — on a first
+install that grep is empty by definition, and an empty result must never read as
+an answer. Candidates come from what the repo contains: its scripts, its skill
+files, its `package.json`, its CI config. The prefix grep has one job,
+reconciling a repo that has already adopted the convention, and finding nothing
+is its normal result.
+
 ## The vocabulary is shared, not invented here
 
 The glossary came from the sibling repos that use it — `karabiner` and `axshot`
@@ -136,9 +141,9 @@ one is never the answer.
 Where the other session has taken the product somewhere incompatible — not a textual
 conflict but a different design — that is not a merge to resolve. Say what each side did
 and put the choice to the user, then fold in whatever their answer keeps. The interactive
-skill's second life came out of exactly that: it was built to ask which rows to install,
+path came out of exactly that: a concurrent session built it to ask which rows to install,
 which the hook made meaningless, and it survived by being pointed at the local half
-instead.
+instead — then folded into `--ask` rather than kept as a skill of its own.
 
 ## Evaluating a change
 

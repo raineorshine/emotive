@@ -1,6 +1,7 @@
 ---
 name: emotive-setup
-description: Wire the session-title lifecycle prefixes into the current project — the repo-specific half of the convention in its agent instructions, and the prefix changes the glossary promises wired into the skills that own them. Use when the user invokes /emotive-setup or says "set up emoji status", "adopt the session title prefixes here", "wire the emoji lifecycle into this repo".
+description: Wire the session-title lifecycle prefixes into the current project — the repo-specific half of the convention in its agent instructions, and the prefix changes the glossary promises wired into the skills that own them. Pass --ask to be asked about the parts it would otherwise infer. Use when the user invokes /emotive-setup or says "set up emoji status", "adopt the session title prefixes here", "wire the emoji lifecycle into this repo", "ask me about the emoji setup", "don't guess my shared resources".
+argument-hint: "[--ask]"
 ---
 
 # Emotive setup
@@ -14,9 +15,12 @@ the prefix changes wired into the skills that own them.
 `template.md`, beside this file, carries the shape of that local half. Read it before writing
 anything.
 
-Where this procedure would infer the local half from the repo, `emotive-setup-interactive` asks
-instead — same install, same wording, the answers supplied rather than guessed. Neither skill can
-change which rows exist: the hook delivers the glossary whole, so there is no membership to set.
+**`--ask` changes who decides, and nothing else.** Without it, step 3 reads the repo and writes the
+most likely answer. With it, step 3 shows what it found and the user picks. Same questions either
+way; a guess versus an answer. It cannot change which rows exist — the hook delivers the glossary
+whole, so there is no membership to set, and nothing here asks about one.
+
+$ARGUMENTS
 
 ## 0. Put `⏳ ` on this session first
 
@@ -82,6 +86,38 @@ Answer them from the repo, and write down only the ones that have an answer:
   harness refuses, hardware it does not have. If any stage is out of reach, say which and why, and
   where a cloud session ends instead.
 
+Every one of those is found by reading what the repo contains — its scripts, its skill files, its
+`package.json`, its CI config — never by looking for prefix characters in it. **A project adopting
+this convention has no emoji in it yet**, so a grep for the twelve prefixes is empty by definition
+on a first install and cannot be what the answers come from. That grep has exactly one job, in step
+4: on a repo that has already adopted the convention, it finds which skills are already setting
+something. Expect nothing from it otherwise, and never let an empty result read as "this repo shares
+nothing".
+
+### With `--ask`, show what you found instead of picking
+
+One `AskUserQuestion` call, three `multiSelect` questions. The tool caps a question at four options,
+so each offers at most four of what the reading above turned up — and the options are things from
+this repo, with their paths, never prefixes:
+
+| Question | Options come from | The answer writes |
+| --- | --- | --- |
+| What do sessions here race on? | scripts that write outside the worktree, a lock file, a fixed port, an `.env` outside git, an install or deploy target — plus "nothing is shared" | the `💾 ` / `🔍 ` / `🔒 ` hazard paragraph, or the line that says those rows are inert here |
+| What makes a branch done? | the test, lint and build commands that exist — a `test` skill, a `package.json` script, a build script, CI — plus "no gate" | the `📦 ` line, naming the command verbatim |
+| Which skills should set a prefix? | the skill files that exist, each labelled with the prefix it would own | the wiring in step 4, and whether a `ship` skill gets written |
+
+Each option's description says what the project gets by choosing it, naming the script or command. A
+skill that **already** sets a prefix leads its description with *already sets `<prefix>`* — that one
+is not really a choice, since the skill is what runs, and an option offered then overridden makes
+the dialog a lie.
+
+**"Nothing is shared" is a real answer, not a refusal.** It writes the one-line inert version, which
+is what `template.md` asks for in a repo with nothing to warn about. An empty answer to all three is
+a refusal: nothing is installed, no file is touched, and the response says so in a line.
+
+Where there is nothing to choose between — one candidate and no ambiguity — write it and do not ask
+about it. A dialog whose every question has one option is a confirmation prompt, not a choice.
+
 **Never re-list the glossary.** A row copied into the repo is a row that goes stale the next time
 the plugin ships one, and the sweep this plugin exists to end starts again. Name a prefix only to
 say something about it that is true here and nowhere else.
@@ -111,7 +147,11 @@ A missing `test` skill is not this skill's job: a repo with no gate has no `📦
 records that instead.
 
 Where a repo's skill already sets a prefix, keep the emoji it uses and reconcile the other way —
-match the section to the skill, because the skill is the thing that runs.
+match the section to the skill, because the skill is the thing that runs. Find those by grepping
+every skill file for the twelve prefix characters, rather than trusting the instructions' prose
+about which skill sets what: the prose goes stale and the skill runs. On a first install this finds
+nothing, which is the expected result and not a finding — it is only a re-run or a sweep that has
+anything to reconcile.
 
 ## 4a. When there is no `ship` skill, write a minimal one
 
