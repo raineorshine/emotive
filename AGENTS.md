@@ -29,9 +29,12 @@ packaging.
 3. Bump the minor version in `plugins/emotive/.claude-plugin/plugin.json`
    for anything that should ship. Without a bump, `claude plugin update` reports
    "already at the latest version" even when `main` has new commits. `/ship`
-   does this. A change entirely outside `plugins/` — this file, the README, the
-   repo's own skills — ships to nobody, so it lands without a bump and without a
-   tag.
+   does this. An install delivers `plugins/emotive/` and nothing else, so a
+   change entirely outside it — this file, the README, the repo's own skills —
+   lands without a bump and without a tag: bumping would announce an update that
+   changes nothing on an installed machine. That is about the plugin channel
+   alone. The README is the package's front page and is public the moment it
+   lands on `main`, which is where someone deciding whether to install reads it.
 
 The local install is a symlink: `~/.claude/skills/emotive-setup` points at
 `plugins/emotive/skills/emotive-setup`, so an edit here is live in the next
