@@ -7,8 +7,10 @@ description: Commit and push all changes, release the plugin, then extract the s
 
 Run the whole sequence unattended. Never stop and ask the user to merge, tag, or update anything themselves.
 
-0. Set the session title prefix to 🚀 , replacing whatever prefix is there rather than stacking on
-   it — before the build, not after it lands (see Session titles in AGENTS.md). Say nothing about it.
+0. Leave the title's prefix alone for now. `🚀 ` means shipped, and nothing is shipped until step 6
+   lands — a title that says so earlier is wrong for the whole ship, and stays wrong if the ship
+   falls over. A shipping session keeps whatever is true meanwhile, usually `📦 ` (see Session titles
+   in AGENTS.md).
 1. `./build.sh` — it fails on a placeholder with no generic wording, which is a real failure, not a
    formatting nit. Fix it rather than hand-editing the README block.
 2. Commit all changes.
@@ -31,6 +33,9 @@ Run the whole sequence unattended. Never stop and ask the user to merge, tag, or
    - Locally: `git push origin HEAD:main`.
    - From a cloud session that is refused: open a PR for the branch and merge it
      with the GitHub tools. Rebase-merge, to keep `main` linear.
+   **Once the push succeeds, and not before,** read the title
+   (`mcp__ccd_session_mgmt__get_session` with `"self"`) and set it back with a `🚀 ` prefix,
+   replacing the existing one rather than stacking. Say nothing about it.
 7. Confirm the tag. `.github/workflows/tag-release.yml` tags `v<version>` when the
    version bump lands on `main`; never tag by hand.
    `git fetch origin --tags --force && git tag -l v<version>` — retry for up to a
@@ -51,9 +56,12 @@ Run the whole sequence unattended. Never stop and ask the user to merge, tag, or
 10. Print `🚀 Shipped`
 
 If step 7 finds no tag, say which version is untagged; do not report a clean ship.
-If the ship does not land, put the title back to what is true now: `📦 ` if the branch built clean
-but stayed on the branch, `⏳ ` if the work goes back to implementing, `🚙 ` if it is waiting on the
-user. If it did land, `🚀 ` stays — never clear it to a bare title. Say nothing about it either way.
+
+The `🚀 ` set in step 6 stays through the report and after it, until the session starts something
+else — never cleared to leave a bare title. If the ship never got that far, no `🚀 ` went on and
+there is nothing to undo; check the title still says what is true now (`📦 ` for a gated branch,
+`⏳ ` if the work goes back to implementing, `🚙 ` if it waits on the user) and correct it if not.
+Say nothing about it either way.
 
 A change to what a prefix *means* is not finished by this ship: the sibling repos carry field copies
 of the glossary (see AGENTS.md → The vocabulary is shared, not invented here). Say which repos still

@@ -23,7 +23,7 @@ repo.
 - `📦 ` means <the gate — `npm test && npm run lint`, `./build.sh` clean, or "done on the branch",
   where there is no gate to run>.
 - `🚀 ` ships to `<branch>`, <through a PR / by fast-forward>; `<the ship skill>` is that procedure
-  and sets the prefix itself.
+  and sets the prefix itself, once the push lands. <`📦 ` holds until then.>
 - `🚙 ` is what this repo waits on a user for: <a credential, an OAuth click, a look at the branch>.
 - `💾 ` / `🔒 ` <name the shared thing, or say they are inert here and why>.
 

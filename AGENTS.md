@@ -89,21 +89,22 @@ first, then `github-triage`, `email-filter-builder`, `a-thousand-worlds`, `regar
 and `blunt`, whose `AGENTS.md` files still hold field copies.
 `~/projects/karabiner/docs/workflow.md` holds the original reasoning.
 
-Those copies are what the hook makes unnecessary, and the sweep that removes them
-is a subtraction, not a rewrite: cut the rows and the generic prose, keep only
-what answers the repo. Until a repo is swept it carries the glossary twice, which
-costs tokens but conflicts with nothing.
+Those copies are what the hook makes unnecessary, and the sweep is a subtraction,
+not a rewrite: cut the rows and the generic prose, keep only what answers the repo.
+Until a repo is swept it carries the glossary twice, which costs tokens but
+conflicts with nothing.
 
 Once swept, changing the meaning of a prefix costs one edit here instead of a
 pass over every repo. That is the whole reason the glossary moved into a hook.
 Adding a row costs nothing anywhere, since an unused row is inert by design.
 
-**`regard` inverts `🚀 ` on purpose** — its instructions and its `ship` skill both
-say the prefix means *shipped* and must not go on until the push lands, against
-the glossary's rule of setting it optimistically. A sweep must not flip that: a
-repo may narrow a row, never invert one, and where it has inverted one the fix is
-to write the departure down as a departure and leave the decision to whoever owns
-the repo.
+**`regard` won the argument about `🚀 `.** It held that the prefix names a result
+and must not go on until the push lands, against a glossary that said to set every
+prefix optimistically; the glossary changed to match rather than overruling it. So
+the divergence has flipped: the repos to fix in a sweep are the ones still setting
+`🚀 ` before their gates, and `regard` needs no departure written down. A repo may
+narrow a row, never invert one — but a reasoned inversion is evidence about the
+convention, so read the argument before assuming the repo is wrong.
 
 Say a prefix is **set in the response that enters the stage** — never "by hand",
 which reads as something the user does when every setter is an agent. The
@@ -183,12 +184,11 @@ happens on a branch in a worktree and lands on `main`; `/ship` is that procedure
 The glossary arrives from this plugin's own `SessionStart` hook, so it is not
 repeated here. These are the parts specific to this repo.
 
-- `📦 ` means `./build.sh` ran clean and the version is bumped — shippable
-  without re-running anything.
-- `🚀 ` ships to `main`, which the marketplace serves; `/ship` is that procedure
-  and sets the prefix itself, as its step 0.
-- `🚙 ` is what this repo waits on a user for: a decision about the convention,
-  or a review of a branch.
+- `📦 ` means `./build.sh` ran clean and the version is bumped, and it holds right
+  through a `/ship` until the push lands.
+- `🚀 ` means the push to `main` landed — the marketplace serves `main`, so nothing
+  before that is shipped. `/ship` sets it as its last step; `📦 ` holds until then.
+- `🚙 ` is a decision about the convention, or a review of a branch.
 - `💾 `, `🔍 `, `🔒 ` and `🔓 ` are inert here — nothing in this repo is shared
   across sessions. They arrive anyway; a repo making an exception of itself would
   be arguing against its own product.

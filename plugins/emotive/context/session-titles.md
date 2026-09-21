@@ -1,8 +1,8 @@
 ## Session titles
 
 A lifecycle prefix on the session title says what a session is doing while it is doing it, so the
-sidebar answers "which of these is mid-ship" — or mid-write, or waiting on me — without opening any
-of them. The sidebar already shows a status dot (running / awaiting input / idle) and a branch glyph
+sidebar answers "which of these is waiting on me" — or mid-write, or already shipped — without
+opening any of them. The sidebar already shows a status dot (running / awaiting input / idle) and a branch glyph
 for worktree sessions; neither can be set from here — `set_session_title` takes a title string and
 nothing else. So a **single leading emoji on the title** is the only lever, and it is spent on what
 the app cannot know: where the work stands.
@@ -15,8 +15,8 @@ the app cannot know: where the work stands.
 | `🔓 `  | about to take that slot — queued or blocked on it — or just released it                  |
 | `🔒 `  | holding the single slot only one session can use at a time                               |
 | `💾 `  | writing to a live resource every session shares right now                                |
-| `📦 `  | done on the branch — gated and shippable without re-running anything                     |
-| `🚀 `  | shipping to the default branch, or shipped                                               |
+| `📦 `  | gated and shippable without re-running anything — and it holds through a ship            |
+| `🚀 `  | shipped — the push landed; never set while shipping                                      |
 | `🚙 `  | parked: the work is sound and waiting on the user (a decision, a credential, a click)    |
 | `⏲️ `  | waiting on a task scheduled for later — nothing to do until it fires                     |
 | `🪦 `  | dead end — kept for the findings, not to resume                                          |
@@ -45,8 +45,14 @@ for a stage change to prompt.
 
 Set a prefix **optimistically** — when the stage _starts_, not when it succeeds — and correct it if
 the stage falls over. A title that only becomes true at the end is blank for the whole stretch the
-sidebar is there to describe. A `ship` skill sets `🚀 ` before its gates and puts back what is true
-if the ship does not land, so that one stays honest on its own. `📚 ` goes on in the response that
+sidebar is there to describe.
+
+**`🚀 ` is the exception, because it names a result and not a stage.** It goes on when the push
+lands and never before, so a ship that is rebasing, re-testing or retrying a rejected push still
+shows the prefix that was true before it — usually `📦 `, which holds right through the ship — and a
+ship that falls over needs no correcting. That is what buys the exception: every other prefix needs
+a restore path when its stage fails, and this one cannot fail after the fact. A `ship` skill sets it
+as its last step, not its first. `📚 ` goes on in the response that
 starts a pass of extracting learnings into the instruction files, before anything is read — nothing
 else sets it. The rest are
 set in the response that enters the stage (`mcp__ccd_session_mgmt__set_session_title`), and nothing

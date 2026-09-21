@@ -131,11 +131,12 @@ This is the half that does not go stale, because a skill rereads its own procedu
 an injected rule competes with everything else in context. Edit the skills the repo already has, and
 write the one missing skill that `🚀 ` cannot do without (step 4a).
 
-- **`ship`** — set `🚀 ` as step 0, before the gates run, replacing whatever prefix was there rather
-  than stacking. Add the tail too: if the push fails or the ship is abandoned, the title goes back to
-  what is true now (`📦 ` for a gated branch, `⏳ ` back to implementing, `🚙 ` waiting on the user);
-  if it lands, `🚀 ` stays until another stage replaces it, and is never cleared to leave a bare
-  title. Both steps carry "say nothing about it".
+- **`ship`** — set `🚀 ` as the **last** step, once the push has landed, replacing whatever prefix
+  was there rather than stacking. Not before: `🚀 ` names a result, so a ship that rebases, re-tests
+  or retries a rejected push keeps the prefix that was already true — usually `📦 `, which holds
+  through the ship. That is also why this wiring needs no restore path: a ship that falls over never
+  set it. Once landed, `🚀 ` stays until another stage replaces it, and is never cleared to leave a
+  bare title. Say nothing about it.
 - **The skill that takes a lock**, where there is one — `🔓 ` before the acquire, `🔒 ` once it
   reports acquired, `🔓 ` before the release, then `📦 ` or whatever stage the branch actually
   reached. Each with "say nothing about it".
@@ -164,13 +165,15 @@ ship skill, and it does not introduce a workflow the repo has not chosen.
 Derive the landing shape from the repo, and say in the skill which one it is:
 
 - **Merge commits or a PR in the history, or a remote with branch protection** — commit, push the
-  branch, open the PR. The skill ends at the open PR; `🚀 ` stays through it.
+  branch, open the PR. An open PR is not a landing, so the skill ends at `📦 `; `🚀 ` waits for the
+  merge.
 - **A linear history on the default branch** — commit, rebase, fast-forward, push.
 - **No remote at all** — commit on the default branch and stop. Still worth a skill: it owns the
   gate and the prefix.
 
-The skill's step 0 is the `🚀 `, before the gate. Its last step is the restore, as in step 4. Both
-carry "say nothing about it", and the skill points at the injected glossary rather than restating it.
+The `🚀 ` is the skill's last step, after the landing, as in step 4 — not its first, and with no
+restore path, since a ship that does not land never set it. Say nothing about it, and point at the
+injected glossary rather than restating it.
 
 Where the repo keeps its skills is wherever it already keeps them — `.claude/skills/ship/SKILL.md`
 unless a `.github/skills/` tree exists. A blank project gets `.claude/skills/`.
@@ -185,10 +188,10 @@ Naming this repo's gate, branch or shared resource narrows a row and is the whol
 what a prefix *means* inverts it, and costs the convention the only thing it is for — a sidebar that
 reads the same from one repo to the next.
 
-Some field copies invert one anyway, with an argument attached. `regard` is the known case: its
-instructions and its `ship` skill both say `🚀 ` means *shipped* and must not go on until the push
-lands, which is the opposite of setting it optimistically before the gates. That is a reasoned
-position, not an oversight, and the skill does not get to overrule it silently.
+Some field copies invert one anyway, with an argument attached — and one of them won. `regard` held
+that `🚀 ` means *shipped* and must not go on until the push lands, against a glossary that then said
+to set it optimistically; the glossary changed to match. So a repo's reasoned departure is evidence
+about the convention, not a defect in the repo.
 
 So where a repo contradicts the injected glossary, do not resolve it either way. Leave the skill
 that implements the repo's version alone, and write the departure into the section as a departure —

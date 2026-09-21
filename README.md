@@ -2,13 +2,17 @@
 
 A session-title status convention for Claude Code. A single leading emoji on a
 session's title says what that session is doing while it is doing it, so the chat
-sidebar answers "which of these is mid-ship" — or mid-write, or waiting on me —
-without opening any of them.
+sidebar answers "which of these is waiting on me" — or mid-write, or already
+shipped — without opening any of them.
 
 The sidebar already shows a status dot and a branch glyph, and neither can be set
 from a session; `set_session_title` takes a title string and nothing else. The
 prefix is the only lever, and it is spent on what the app cannot know: where the
 work stands.
+
+Every prefix goes on when its stage *starts*, so the title is true for the whole
+stretch the sidebar is there to describe. 🚀 is the one exception — it names a
+result, and goes on when the push lands.
 
 ## The glossary
 
@@ -22,8 +26,8 @@ work stands.
 | 🔓     | about to take that slot — queued or blocked on it — or just released it                  |
 | 🔒     | holding the single slot only one session can use at a time                               |
 | 💾     | writing to a live resource every session shares right now                                |
-| 📦     | done on the branch — gated and shippable without re-running anything                     |
-| 🚀     | shipping to the default branch, or shipped                                               |
+| 📦     | gated and shippable without re-running anything — and it holds through a ship            |
+| 🚀     | shipped — the push landed; never set while shipping                                      |
 | 🚙     | parked: the work is sound and waiting on the user (a decision, a credential, a click)    |
 | ⏲️     | waiting on a task scheduled for later — nothing to do until it fires                     |
 | 🪦     | dead end — kept for the findings, not to resume                                          |
@@ -56,9 +60,10 @@ instructions and skills:
   database, a real account, a deploy target, a dev-server port. 💾 is the one
   prefix another session acts on, and it earns that only where a paragraph names
   the repo's own commands.
-- **🚀 wired into the project's `ship` skill** — set before the gate, restored
-  if the ship does not land. A project without a `ship` skill gets a minimal one,
-  because every project ends up with one; a new one just has not written it yet.
+- **🚀 wired into the project's `ship` skill** — set once the push lands, never
+  before, so a ship that falls over has nothing to undo. A project without a `ship`
+  skill gets a minimal one, because every project ends up with one; a new one just
+  has not written it yet.
 - **🔒/🔓 wired into the skill that owns a lock**, where there is one.
 
 ## Install
