@@ -22,6 +22,9 @@ ships to, the gate that makes a branch `📦 `, the resource `💾 ` warns about
 dropped for a project that cannot reach its stage yet. An unused row is inert: it costs a line and
 settles the wording before the workflow that needs it arrives.
 
+A project that wants fewer runs `emotive-setup-interactive` instead, which asks which rows to
+install and is the only way membership changes. This skill never drops one and never adds one back.
+
 | Prefix | Means                                                             | Set by                                                     |
 | ------ | ----------------------------------------------------------------- | ---------------------------------------------------------- |
 | `🎨 `  | brainstorming or designing with the user                          | the response that opens the design loop, or a `plan` skill |
@@ -151,6 +154,11 @@ table against what the skills actually set, fill in the rows it is missing, and 
 for a hazard the repo has grown into. Rows are not dropped — a workflow the repo no longer has
 leaves an inert row, not a gap. Same for a repo that carries a thinner version of the vocabulary
 under another heading: fold it in and keep the heading it already uses.
+
+**A section that says it is a chosen subset is revised as it stands.** Correct the rows it has;
+do not fill in the ones it left out. Those gaps are an answer the user gave
+`emotive-setup-interactive`, and filling them in here would undo it silently every time this skill
+runs. Wording is this skill's; membership is that one's.
 
 ## 5. Land it
 

@@ -1,10 +1,10 @@
 # emotive
 
-A session-title status convention for Claude Code, and the `emotive-setup` skill
-that installs it in a project. A single leading emoji on a session's title says
-what that session is doing while it is doing it, so the chat sidebar answers
-"which of these is mid-ship" — or mid-write, or waiting on me — without opening
-any of them.
+A session-title status convention for Claude Code, and the skills that install
+it in a project. A single leading emoji on a session's title says what that
+session is doing while it is doing it, so the chat sidebar answers "which of
+these is mid-ship" — or mid-write, or waiting on me — without opening any of
+them.
 
 The sidebar already shows a status dot and a branch glyph, and neither can be
 set from a session; `set_session_title` takes a title string and nothing else.
@@ -37,7 +37,12 @@ project has no way to reach. An unused row is inert — it costs a line and
 settles the vocabulary before the workflow that needs it arrives, rather than
 leaving it to be invented under pressure by whichever session gets there first.
 
-## What the skill installs
+A project that wants fewer says so out loud, through
+`/emotive-setup-interactive`: it asks which rows to install, and the section it
+writes says on its face that it is a chosen subset, so a later `/emotive-setup`
+corrects the rows it has rather than quietly filling the gaps back in.
+
+## What it installs
 
 - **The `Session titles` section** in the project's agent instructions —
   `AGENTS.md` where there is one, `CLAUDE.md` where that is the only file, and
@@ -80,6 +85,18 @@ first — what ships and to where, what the gate is, what is shared across
 worktrees — then writes the section, wires the skills, and lands the change.
 Running it again revises the section in place rather than appending a second
 copy.
+
+```
+/emotive-setup-interactive
+```
+
+The same install, with the glossary chosen instead of assumed: twelve
+checkboxes in one dialog, and the unchecked prefixes are left out of the table
+entirely. Everything else still comes from the repo — the branch, the gate, the
+shared resource — because those are read, not decided. Two things it will not
+do on your say-so: drop a prefix one of the project's own skills already sets,
+since the skill is what runs, and install an empty table, since an empty
+selection is a refusal.
 
 ## License
 

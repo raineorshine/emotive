@@ -60,6 +60,19 @@ table = "\n".join(
     + ["| " + " | ".join(pad(r[c], w[c]) for c in cols) + " |" for r in rows]
 )
 
+# The interactive skill asks in three groups of four. Every prefix in the
+# glossary must appear in exactly one of them, or a stage becomes unpickable.
+INTERACTIVE = pathlib.Path("plugins/emotive/skills/emotive-setup-interactive/SKILL.md")
+ilines = INTERACTIVE.read_text().split("\n")
+istart = next(i for i, l in enumerate(ilines) if l.startswith("| Question"))
+iend = next(i for i in range(istart, len(ilines)) if not ilines[i].startswith("|"))
+asked = [m.strip() for l in ilines[istart + 2:iend] for m in re.findall(r"`([^`]+)`", l.split("|")[2])]
+listed = [re.search(r"`([^`]+)`", r[0]).group(1).strip() for r in rows]
+if sorted(asked) != sorted(listed):
+    missing = [p for p in listed if p not in asked]
+    extra = [p for p in asked if p not in listed]
+    raise SystemExit(f"build.sh: the interactive skill's groups do not cover the glossary: missing {missing}, extra {extra}")
+
 readme = README.read_text()
 for marker in (BEGIN, END):
     if marker not in readme:
@@ -67,5 +80,5 @@ for marker in (BEGIN, END):
 head, rest = readme.split(BEGIN, 1)
 _, tail = rest.split(END, 1)
 README.write_text(f"{head}{BEGIN}\n\n{table}\n\n{END}{tail}")
-print("build.sh: injected the glossary into README.md")
+print(f"build.sh: injected the glossary into README.md; {len(asked)} prefixes asked in {iend - istart - 2} groups")
 PY

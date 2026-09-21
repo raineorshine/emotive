@@ -103,3 +103,20 @@ design loop is live. `⏳ ` loses to everything.
 
 Handing back while a hazard is still live keeps the hazard prefix, not `🚙 ` — the user clicking
 through a console is still a write in flight.
+
+## When the glossary is a chosen subset
+
+`emotive-setup` installs every row. `emotive-setup-interactive` asks, and a project can come out
+with fewer — which makes one paragraph above false, so it is swapped rather than left standing.
+Replace **"The whole glossary ships, including rows for stages this repo has no way to reach yet…"**
+with:
+
+> The glossary here is a chosen subset: <N> of the convention's twelve prefixes, picked when it was
+> installed. The rest were left out on purpose rather than forgotten — a stage this project has no
+> way to reach has no row. Adding one back is a line in this table and, where something has to set
+> it, a line in that skill; it is not a convention to invent, so take the wording from the rest of
+> the glossary rather than writing it fresh.
+
+The swap is the whole difference in the installed text. Every other paragraph reads the same, since
+none of them argue for the rows themselves — and a section that kept the inert-row paragraph over a
+table with gaps in it would be telling the next session the vocabulary is complete when it is not.

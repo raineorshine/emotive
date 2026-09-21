@@ -1,9 +1,10 @@
 # AGENTS.md
 
 Emotive: a session-title status convention for Claude Code, shipped as the
-`emotive-setup` skill in a plugin named `emotive`. The whole product is one
-skill — `SKILL.md` and the `template.md` it installs from; everything else is
-packaging.
+`emotive-setup` and `emotive-setup-interactive` skills in a plugin named
+`emotive`. The whole product is one procedure and the `template.md` it installs
+from; the interactive skill is a front door onto that procedure, not a second
+copy of it, and everything else is packaging.
 
 ## Layout
 
@@ -11,6 +12,7 @@ packaging.
 |---|---|
 | `plugins/emotive/skills/emotive-setup/SKILL.md` | the install procedure — what the skill does when it runs |
 | `plugins/emotive/skills/emotive-setup/template.md` | the convention itself: the text that lands in a project, between its `BEGIN`/`END` markers |
+| `plugins/emotive/skills/emotive-setup-interactive/SKILL.md` | the same install with the glossary chosen by the user — the only skill that changes which rows land |
 | `plugins/emotive/.claude-plugin/plugin.json` | version; gates `claude plugin update` |
 | `.claude-plugin/marketplace.json` | the marketplace listing that serves the plugin |
 | `build.sh` | syncs the glossary table from `template.md` into the README |
@@ -21,11 +23,20 @@ packaging.
 1. Edit `SKILL.md` (how the install runs) or `template.md` (what it installs).
    The two have different jobs: a rule an installing session follows goes in
    `SKILL.md`, a rule the *installed* project follows goes in `template.md`.
+   `emotive-setup-interactive/SKILL.md` is the third file and takes only what is
+   different about asking — it defers to `emotive-setup` for the procedure, so a
+   rule that belongs to the install itself goes there and is inherited. Two
+   copies of a step is the failure mode; the interactive skill is a diff.
+   Membership lives in exactly one of them: `emotive-setup` never drops a row,
+   `emotive-setup-interactive` is the only thing that does, and `emotive-setup`
+   revises a subset section as it stands rather than filling its gaps.
 2. Run `./build.sh` — the README embeds the glossary table between
    `glossary:begin` / `glossary:end` markers. Never hand-edit that block; it
    will be overwritten. The build fails on a placeholder it has no generic
    wording for, so a new `<placeholder>` in the table needs a line in its
-   `GENERIC` map.
+   `GENERIC` map. It also fails when the interactive skill's three groups stop
+   covering the glossary exactly — a prefix in the table that nobody can check is
+   the `🚀 `-row-with-no-owner bug wearing a different hat.
 3. Bump the minor version in `plugins/emotive/.claude-plugin/plugin.json`
    for anything that should ship. Without a bump, `claude plugin update` reports
    "already at the latest version" even when `main` has new commits. `/ship`
@@ -39,7 +50,15 @@ packaging.
 The local install is a symlink: `~/.claude/skills/emotive-setup` points at
 `plugins/emotive/skills/emotive-setup`, so an edit here is live in the next
 session with no build or install step. Installing the plugin on this machine too
-would list the skill twice.
+would list the skill twice. Each skill needs its own symlink, and each points at
+the main checkout rather than a worktree — a new skill is therefore not live
+locally until the branch that adds it lands, and linking it before then leaves a
+dangling entry in the skill list.
+
+`AskUserQuestion` caps a question at four options and a call at four questions,
+so "one large multiselect over all twelve prefixes" is three grouped
+`multiSelect` questions in a single call. One call renders as one dialog; three
+calls would be three interruptions.
 
 Landing that bump on `main` tags the release from CI. Never tag by hand: a cloud
 session cannot push `refs/tags/*` at all, so a tag step in the local workflow is
