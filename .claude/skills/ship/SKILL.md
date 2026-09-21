@@ -10,7 +10,7 @@ Run the whole sequence unattended. Never stop and ask the user to merge, tag, or
 1. Set the session title prefix to 🚀 (see Session titles in AGENTS.md). Say nothing about it.
 2. `./build.sh` — it fails on a placeholder with no generic wording, which is a real failure, not a
    formatting nit. Fix it rather than hand-editing the README block.
-3. Bump the minor version in `plugins/setup-emoji-status/.claude-plugin/plugin.json`.
+3. Bump the minor version in `plugins/emotive/.claude-plugin/plugin.json`.
 4. Commit all changes.
 5. `git fetch origin && git rebase origin/main` — resolve any conflicts.
 6. `git push` (add `--set-upstream origin <branch>` on the first push of a branch).
@@ -23,10 +23,10 @@ Run the whole sequence unattended. Never stop and ask the user to merge, tag, or
    version bump lands on `main`; never tag by hand.
    `git fetch origin --tags --force && git tag -l v<version>` — retry for up to a
    minute while Actions runs.
-9. `claude plugin marketplace update setup-emoji-status && claude plugin update setup-emoji-status`
+9. `claude plugin marketplace update emotive && claude plugin update emotive`
    — without the marketplace refresh, the cached listing reports the pre-push version as latest.
    Skip this where the plugin is not installed: a machine running the skill through the
-   `~/.claude/skills/setup-emoji-status` symlink already has the new files, and the commands report
+   `~/.claude/skills/emotive-setup` symlink already has the new files, and the commands report
    an unknown plugin. Say which of the two it was.
 10. Invoke the `learn` skill. A shipped release is the moment its lessons are worth
     writing down, and it needs no ask — it is the last stage of shipping. Skip it only

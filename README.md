@@ -1,9 +1,10 @@
-# setup-emoji-status
+# emotive
 
-A Claude Code skill that installs the session-title emoji status convention in a
-project. A single leading emoji on a session's title says what that session is
-doing while it is doing it, so the chat sidebar answers "which of these is
-mid-ship" — or mid-write, or waiting on me — without opening any of them.
+A session-title status convention for Claude Code, and the `emotive-setup` skill
+that installs it in a project. A single leading emoji on a session's title says
+what that session is doing while it is doing it, so the chat sidebar answers
+"which of these is mid-ship" — or mid-write, or waiting on me — without opening
+any of them.
 
 The sidebar already shows a status dot and a branch glyph, and neither can be
 set from a session; `set_session_title` takes a title string and nothing else.
@@ -52,26 +53,26 @@ leaving it to be invented under pressure by whichever session gets there first.
 ## Install
 
 ```sh
-claude plugin marketplace add raineorshine/setup-emoji-status
-claude plugin install setup-emoji-status@setup-emoji-status
+claude plugin marketplace add raineorshine/emotive-setup
+claude plugin install emotive-setup@emotive
 ```
 
 For a one-off session, skipping install:
 
 ```sh
-claude --plugin-dir path/to/setup-emoji-status/plugins/setup-emoji-status
+claude --plugin-dir path/to/emotive-setup/plugins/emotive
 ```
 
 Upgrade:
 
 ```sh
-claude plugin update setup-emoji-status
+claude plugin update emotive
 ```
 
 ## Use
 
 ```
-/setup-emoji-status
+/emotive-setup
 ```
 
 Run it in the project that should adopt the convention. It reads the repo

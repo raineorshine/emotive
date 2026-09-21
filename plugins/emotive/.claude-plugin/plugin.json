@@ -1,0 +1,10 @@
+{
+  "name": "emotive",
+  "description": "Installs the emotive session-title status convention in a project's agent instructions and skills.",
+  "version": "0.1.0",
+  "license": "MIT",
+  "author": {
+    "name": "Raine Revere",
+    "email": "raine.revere@pm.me"
+  }
+}

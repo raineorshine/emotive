@@ -1,16 +1,17 @@
 # AGENTS.md
 
-The `setup-emoji-status` skill, packaged as a Claude Code plugin. The whole
-product is one skill — `SKILL.md` and the `template.md` it installs from;
-everything else is packaging.
+Emotive: a session-title status convention for Claude Code, shipped as the
+`emotive-setup` skill in a plugin named `emotive`. The whole product is one
+skill — `SKILL.md` and the `template.md` it installs from; everything else is
+packaging.
 
 ## Layout
 
 | path | what |
 |---|---|
-| `plugins/setup-emoji-status/skills/setup-emoji-status/SKILL.md` | the install procedure — what the skill does when it runs |
-| `plugins/setup-emoji-status/skills/setup-emoji-status/template.md` | the convention itself: the text that lands in a project, between its `BEGIN`/`END` markers |
-| `plugins/setup-emoji-status/.claude-plugin/plugin.json` | version; gates `claude plugin update` |
+| `plugins/emotive/skills/emotive-setup/SKILL.md` | the install procedure — what the skill does when it runs |
+| `plugins/emotive/skills/emotive-setup/template.md` | the convention itself: the text that lands in a project, between its `BEGIN`/`END` markers |
+| `plugins/emotive/.claude-plugin/plugin.json` | version; gates `claude plugin update` |
 | `.claude-plugin/marketplace.json` | the marketplace listing that serves the plugin |
 | `build.sh` | syncs the glossary table from `template.md` into the README |
 | `.github/workflows/tag-release.yml` | tags `v<version>` when a bump lands on `main` |
@@ -25,7 +26,7 @@ everything else is packaging.
    will be overwritten. The build fails on a placeholder it has no generic
    wording for, so a new `<placeholder>` in the table needs a line in its
    `GENERIC` map.
-3. Bump the minor version in `plugins/setup-emoji-status/.claude-plugin/plugin.json`
+3. Bump the minor version in `plugins/emotive/.claude-plugin/plugin.json`
    for anything that should ship. Without a bump, `claude plugin update` reports
    "already at the latest version" even when `main` has new commits. `/ship`
    does this.

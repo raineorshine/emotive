@@ -1,15 +1,15 @@
 {
-  "name": "setup-emoji-status",
-  "description": "Plugin for the session-title emoji status convention.",
+  "name": "emotive",
+  "description": "Emotive: a session-title emoji status convention for Claude Code.",
   "owner": {
     "name": "Raine Revere",
     "email": "raine.revere@pm.me"
   },
   "plugins": [
     {
-      "name": "setup-emoji-status",
-      "description": "Installs the session-title emoji status convention in a project's agent instructions and skills.",
-      "source": "./plugins/setup-emoji-status"
+      "name": "emotive",
+      "description": "Installs the emotive session-title status convention in a project's agent instructions and skills.",
+      "source": "./plugins/emotive"
     }
   ]
 }

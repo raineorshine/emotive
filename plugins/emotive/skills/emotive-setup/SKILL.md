@@ -1,10 +1,10 @@
 ---
-name: setup-emoji-status
+name: emotive-setup
 description: >
   Set up the session-title emoji status convention in the current project — write
   the "Session titles" section into the repo's agent instructions and wire the
   prefixes into the repo's own skills. Use when the user invokes
-  /setup-emoji-status or says "set up emoji status", "adopt the session title
+  /emotive-setup or says "set up emoji status", "adopt the session title
   prefixes here", "add the emoji lifecycle to this repo".
 ---
 

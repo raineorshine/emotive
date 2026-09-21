@@ -1,6 +1,6 @@
 ---
 name: update
-description: Update the setup-emoji-status skill per a given prompt. Use when the user invokes /update <prompt>.
+description: Update the emotive-setup skill per a given prompt. Use when the user invokes /update <prompt>.
 argument-hint: <prompt>
 ---
 
