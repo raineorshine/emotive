@@ -42,10 +42,15 @@ Landing that bump on `main` tags the release from CI. Never tag by hand: a cloud
 session cannot push `refs/tags/*` at all, so a tag step in the local workflow is
 one more thing that silently only works from a laptop.
 
-An emoji is two columns wide and a variation selector is zero, so a markdown
-table padded by character count comes out ragged. `build.sh` pads the generated
-glossary by display width; a table written by hand here needs the same
-arithmetic, or prettier's.
+An emoji is two columns wide, and a variation selector is zero but widens the
+character before it, so a markdown table padded by character count comes out
+ragged. `build.sh` pads the generated glossary by display width; a table written
+by hand here needs the same arithmetic, or prettier's.
+
+The README shows a prefix as a bare emoji — 📚, never `📚 `. The code formatting
+and the trailing space belong to `template.md`, where a session reading it is
+about to set a title; `build.sh` strips them from the generated table, and prose
+in the README follows the same rule.
 
 ## The vocabulary is shared, not invented here
 

@@ -17,18 +17,18 @@ the work stands.
 
 | Prefix | Means                                                                                    |
 | ------ | ---------------------------------------------------------------------------------------- |
-| `🎨 `  | brainstorming or designing with the user — exploring, sketching, deciding what to build  |
-| `⏳ `  | implementing — the weakest of them; every other prefix takes precedence                  |
-| `🔍 `  | auditing against live state — a dry run, or the plan it printed, with an apply to follow |
-| `🔓 `  | about to take that slot — queued or blocked on it — or just released it                  |
-| `🔒 `  | holding the single slot only one session can use at a time                               |
-| `💾 `  | writing to a live resource every session shares right now                                |
-| `📦 `  | done on the branch — gated and shippable without re-running anything                     |
-| `🚀 `  | shipping to `main`, or shipped                                                           |
-| `🚙 `  | parked: the work is sound and waiting on the user (a decision, a credential, a click)    |
-| `⏲️ `   | waiting on a task scheduled for later — nothing to do until it fires                     |
-| `🪦 `  | dead end — kept for the findings, not to resume                                          |
-| `📚 `  | extracting learnings into `AGENTS.md`, `README.md` or the skills                         |
+| 🎨     | brainstorming or designing with the user — exploring, sketching, deciding what to build  |
+| ⏳     | implementing — the weakest of them; every other prefix takes precedence                  |
+| 🔍     | auditing against live state — a dry run, or the plan it printed, with an apply to follow |
+| 🔓     | about to take that slot — queued or blocked on it — or just released it                  |
+| 🔒     | holding the single slot only one session can use at a time                               |
+| 💾     | writing to a live resource every session shares right now                                |
+| 📦     | done on the branch — gated and shippable without re-running anything                     |
+| 🚀     | shipping to `main`, or shipped                                                           |
+| 🚙     | parked: the work is sound and waiting on the user (a decision, a credential, a click)    |
+| ⏲️     | waiting on a task scheduled for later — nothing to do until it fires                     |
+| 🪦     | dead end — kept for the findings, not to resume                                          |
+| 📚     | extracting learnings into `AGENTS.md`, `README.md` or the skills                         |
 
 <!-- glossary:end -->
 
@@ -42,13 +42,13 @@ leaving it to be invented under pressure by whichever session gets there first.
 - **The `Session titles` section** in the project's agent instructions —
   `AGENTS.md` where there is one, `CLAUDE.md` where that is the only file, and
   both (with a `CLAUDE.md` that imports `AGENTS.md`) in a blank project.
-- **The rows, tailored.** Which branch `🚀 ` ships to, what the gate is that
-  makes a branch `📦 `, what the project waits on a user for, what is shared
+- **The rows, tailored.** Which branch 🚀 ships to, what the gate is that
+  makes a branch 📦, what the project waits on a user for, what is shared
   across worktrees and therefore worth warning other sessions about.
-- **`🚀 ` wired into the project's `ship` skill** — set before the gate, restored
+- **🚀 wired into the project's `ship` skill** — set before the gate, restored
   if the ship does not land. A project without a `ship` skill gets a minimal one,
   because every project ends up with one; a new one just has not written it yet.
-- **`🔒 `/`🔓 ` wired into the skill that owns a lock**, where there is one.
+- **🔒/🔓 wired into the skill that owns a lock**, where there is one.
 
 ## Install
 

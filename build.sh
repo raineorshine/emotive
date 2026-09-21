@@ -24,9 +24,15 @@ GENERIC = {
 }
 
 def width(s):
-    # An emoji occupies two columns; a variation selector none.
-    return sum(0 if ch == "\ufe0f" else 2 if ord(ch) >= 0x1F300 or unicodedata.east_asian_width(ch) in "WF" else 1
-               for ch in s)
+    # An emoji occupies two columns; a variation selector none — but it also
+    # promotes the character it follows to emoji presentation, and so to two.
+    def w(i, ch):
+        if ch == "\ufe0f":
+            return 0
+        wide = (ord(ch) >= 0x1F300 or unicodedata.east_asian_width(ch) in "WF"
+                or s[i + 1:i + 2] == "\ufe0f")
+        return 2 if wide else 1
+    return sum(w(i, ch) for i, ch in enumerate(s))
 
 lines = TEMPLATE.read_text().split("\n")
 start = next(i for i, l in enumerate(lines) if l.startswith("| Prefix"))
@@ -37,6 +43,10 @@ for row in rows:
     for i, cell in enumerate(row):
         for k, v in GENERIC.items():
             row[i] = row[i].replace(k, v)
+# The template code-formats the prefix to keep its trailing space visible, which
+# is what a session setting one needs; the README shows the bare emoji instead.
+for row in rows:
+    row[0] = row[0].strip("`").strip()
 leftover = [c for r in rows for c in r if re.search(r"<[^>]+>", c)]
 if leftover:
     raise SystemExit(f"build.sh: unresolved placeholder in the glossary: {leftover[0]}")
