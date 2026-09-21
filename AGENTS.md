@@ -47,13 +47,14 @@ copy of it, and everything else is packaging.
    alone. The README is the package's front page and is public the moment it
    lands on `main`, which is where someone deciding whether to install reads it.
 
-The local install is a symlink: `~/.claude/skills/emotive-setup` points at
-`plugins/emotive/skills/emotive-setup`, so an edit here is live in the next
-session with no build or install step. Installing the plugin on this machine too
-would list the skill twice. Each skill needs its own symlink, and each points at
-the main checkout rather than a worktree — a new skill is therefore not live
-locally until the branch that adds it lands, and linking it before then leaves a
-dangling entry in the skill list.
+This machine runs the installed plugin, not a symlink into the repo, so an edit
+here is not live until `/ship` lands it and `claude plugin update` fetches the
+new version — step 8 of `/ship` is that fetch. The other way to run it is a
+symlink per skill in `~/.claude/skills/`, each pointing at the main checkout
+rather than a worktree, live with no build or install step; even then a new skill
+is not live until the branch that adds it lands, and linking it before then
+leaves a dangling entry in the skill list. The two must not both exist, or the
+skill is listed twice.
 
 `AskUserQuestion` caps a question at four options and a call at four questions,
 so "one large multiselect over all twelve prefixes" is three grouped
@@ -91,6 +92,12 @@ which reads as something the user does when every setter is an agent. The
 distinction the wording has to carry is whether a skill owns the stage and
 re-reads it each run, or a response sets it inline from an instruction it has to
 remember.
+
+Name a stage by what happens in it, never by a skill only this machine has. The
+`📚 ` row said "the response that invokes `learn`", and `learn` is a user-level
+skill, so every project that installed the section inherited a reference it
+could not resolve. A skill the install wires is fair to name — `ship`, or the one
+that takes a lock — because the install either finds it or writes it.
 
 ## Evaluating a change
 
