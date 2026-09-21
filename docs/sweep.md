@@ -4,8 +4,9 @@ Cutting the pre-hook glossary copy out of a repo that already adopted the
 convention, and reconciling its skills with the current rows. Read this before
 running `emotive-setup` against a repo that is not this one.
 
-Four repos were swept this way in one pass — `regard`, `github-triage`,
-`a-thousand-worlds`, `axshot` — which is the sample everything below comes from.
+Six repos were swept this way — `regard`, `github-triage`, `a-thousand-worlds`,
+`axshot`, then `karabiner` and `email-filter-builder` — which is the sample
+everything below comes from.
 
 ## Never run the target's own `ship` skill
 
@@ -17,6 +18,20 @@ change that touches one markdown section, takes over the machine.
 
 Commit the edit directly instead, and say in the sweep's own report that the gate
 was skipped and why.
+
+## Find the copy before concluding there isn't one
+
+The section is not always `## Session titles` in `AGENTS.md`. `email-filter-builder`
+has it as a `###` under `## Repo`, and `karabiner` keeps it in `docs/workflow.md`
+with `AGENTS.md` not mentioning it at all. A `grep -c '^## Session titles'` reported
+both as unswept-and-empty when both held the full glossary.
+
+Grep for a row instead of a heading, and allow the prefix cell either spelling —
+some repos write `` | `🚀 ` | `` and some write `| 🚀 |`:
+
+```bash
+grep -rn '^| `\?[🎨⏳🔍🔓🔒💾📦🚀🚙⏲🪦📚]' --include='*.md' .
+```
 
 ## Read the target's git state before touching it
 
@@ -52,8 +67,13 @@ Name them in the sweep's prompt so they survive, and check they did afterwards.
 
 ## Check the result, not the report
 
-Per repo, after it finishes: no glossary rows left in the table
-(`grep -c '^| \`[🎨⏳🔍🔓🔒💾📦🚀🚙⏲🪦📚]' AGENTS.md` returns 0), the hazard
-paragraphs still present, the `ship` skill setting `🚀 ` after its landing rather
-than at step 0, and no dangling links to a section the sweep deleted — `regard`
-had a `docs/workflow.md#session-titles` anchor pointing at one.
+Per repo, after it finishes: the row grep above returns nothing, the hazard
+paragraphs are still present, the `ship` skill sets `🚀 ` after its landing rather
+than at step 0, and no link points at a section the sweep deleted — `regard` had a
+`docs/workflow.md#session-titles` anchor pointing at one.
+
+A repo may also come out needing a skill that never existed. `email-filter-builder`
+had no owner for its `🔍 ` → `💾 ` pair: `src/sync.js` is a dry run by default and
+`--apply` writes, so the two prefixes bracketed one operation and were being set
+from memory in a response. That is the same argument as the `🚀 `-row-with-no-owner
+bug, and the fix is the same — write the skill.
