@@ -220,6 +220,11 @@ files and the skills this skill edited, and say what was left behind — never s
 working tree in. A project that is not a git repo gets the files and a line saying nothing was
 committed.
 
+**Not for a sweep.** Where this is a run against someone else's repo rather than the user's own
+current project, commit the edit directly and say in the report that the gate was skipped and why.
+A sweep is a docs-only change and a sibling's gates are not docs-only — some install a built app
+and drive the real keyboard, which is not what one markdown section should cost.
+
 Report what landed: which file carries the local half and what it says, which skills now set a
 prefix, whether a `ship` skill was written, and whether the glossary hook is live on this machine.
 Never report the prefix on this session's own title.

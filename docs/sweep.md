@@ -35,8 +35,8 @@ grep -rn '^| `\?[🎨⏳🔍🔓🔒💾📦🚀🚙⏲🪦📚]' --include='*.m
 
 ## Read the target's git state before touching it
 
-Every one of the four had unpushed commits on `main`, and one had diverged
-(ahead 3, behind 2). Neither is the sweep's business:
+All four repos swept in the first pass had unpushed commits on `main`, and one had
+diverged (ahead 3, behind 2). Neither is the sweep's business:
 
 - **Unpushed commits** ride along on any push. Read them first. If they are
   unrelated work, commit locally and leave the push to whoever owns them.
@@ -51,8 +51,8 @@ Every one of the four had unpushed commits on `main`, and one had diverged
 
 Sibling repos are independent, so sweeps run at once with nothing to coordinate —
 the opposite of two sessions shipping the same repo, where the version number
-collides (see AGENTS.md → Shipping while another session is shipping). One
-background session per repo, and four at once was fine.
+collides (see the `ship` skill's rebase step). One background session per repo, and
+four at once was fine.
 
 **`--ask` cannot be backgrounded at all.** The dialog has to reach the user, and a
 headless session has nobody to answer it, so an asking sweep runs from the session

@@ -3,7 +3,8 @@
 Emotive: a session-title status convention for Claude Code, shipped as a plugin
 named `emotive`. The product is in two halves. The **glossary** —
 `context/session-titles.md` — is injected into every session by a `SessionStart`
-hook, so it needs no install and is identical everywhere. The **wiring** — the
+hook, so it needs no per-repo install and is identical everywhere — the plugin
+itself still has to be installed on the machine. The **wiring** — the
 `emotive-setup` skill, which asks rather than infers when passed `--ask` —
 installs only what a hook cannot know: what a row means in one particular repo,
 and the prefix changes its own skills have to set. Everything else is packaging.
@@ -18,161 +19,101 @@ and the prefix changes its own skills have to set. Everything else is packaging.
 | `plugins/emotive/skills/emotive-setup/template.md` | the shape of the local half: what lands in one repo's instructions |
 | `plugins/emotive/.claude-plugin/plugin.json` | version; gates `claude plugin update` |
 | `.claude-plugin/marketplace.json` | the marketplace listing that serves the plugin |
-| `docs/hook-injection.md` | how the injection works, what is broken about it, what was rejected |
-| `docs/sweep.md` | running the sweep against a sibling repo, and what it can destroy |
+| `.claude/skills/ship/SKILL.md` | the ship procedure — build, rebase, version, land, tag, learn |
+| `.claude/skills/update/SKILL.md` | `/update <prompt>` — routes a change to the right half |
 | `build.sh` | normalizes the glossary table and copies it into the README |
 | `.github/workflows/tag-release.yml` | tags `v<version>` when a bump lands on `main` |
+| `docs/glossary.md` | wording rules for the injected file, and what the build does to its table |
+| `docs/evaluating-a-change.md` | how to find out what an edit actually does before shipping it |
+| `docs/hook-injection.md` | how the injection works, what is broken about it, what was rejected |
+| `docs/sweep.md` | running the sweep against a sibling repo, and what it can destroy |
 
 ## Editing the convention
 
-1. Pick the half. `context/session-titles.md` holds what every session reads —
-   the rows, and every rule that is true regardless of repo. `SKILL.md` holds
-   what an installing session does. `template.md` holds the shape of what lands
-   in one repo's instructions. A rule in the wrong half either reaches nobody or
-   reaches everybody unresolved. Asking is a branch inside `SKILL.md`, reached by
-   `--ask`, not a second skill deferring to the first: two documents describing one
-   procedure have to be kept agreeing, and that agreement is not checkable. As a
-   branch, a change to a step is one edit. What the ask may cover is bounded to the
-   local half, never the glossary, which no skill installs and so none can subset.
-2. Run `./build.sh` — it re-pads the glossary in `context/session-titles.md` and
-   copies it into the README between `glossary:begin` / `glossary:end` markers.
-   Never hand-edit that block; it will be overwritten. The build fails on a
-   `<placeholder>` in the glossary, because that file ships as-is: a placeholder
-   there would reach every session unresolved. Tailored wording belongs in
-   `template.md`.
-3. Bump the minor version in `plugins/emotive/.claude-plugin/plugin.json` for
-   anything that should ship; `/ship` does this. Without a bump, `claude plugin
-   update` reports "already at the latest version" even when `main` has new
-   commits. An install delivers `plugins/emotive/` and nothing else, so a change
-   entirely outside it lands without a bump or a tag — bumping would announce an
-   update that changes nothing installed. The README still goes public on `main`.
+**Pick the half first.** `context/session-titles.md` holds what every session
+reads — the rows, and every rule that is true regardless of repo. `SKILL.md` holds
+what an installing session does. `template.md` holds the shape of what lands in one
+repo's instructions. A rule in the wrong half either reaches nobody or reaches
+everybody unresolved. The test for the first half: would this sentence read the
+same in a repo you have never seen? If a rule bound for the shipped convention names
+a command, a branch or a resource, it belongs in `template.md`.
 
-This machine runs the installed plugin, not a symlink into the repo, so an edit
-here is not live until `/ship` lands it and `claude plugin update` fetches it.
-`claude --plugin-dir plugins/emotive` loads the working tree for one session to
-try it first. Never a symlink *and* the plugin — see
+Asking is a branch inside `SKILL.md`, reached by `--ask`, not a second skill
+deferring to the first: two documents describing one procedure have to be kept
+agreeing, and that agreement is not checkable. As a branch, a change to a step is
+one edit. What the ask may cover is bounded to the local half, never the glossary,
+which no skill installs and so none can subset.
+
+**Nothing the skill decides may come from grepping a repo for prefix characters.**
+A project adopting this convention has no emoji in it yet, so that grep is empty by
+definition on a first install, and empty must never read as an answer. Candidates
+come from what the repo contains — its scripts, its skill files, its `package.json`,
+its CI config. The grep's one job is reconciling a repo that already adopted the
+convention.
+
+**Run `./build.sh`** — it re-pads the glossary in `context/session-titles.md` and
+copies it into the README between `glossary:begin` / `glossary:end` markers. Never
+hand-edit that block or hand-pad a table; see [docs/glossary.md](docs/glossary.md)
+for the wording rules and what the build does.
+
+**Then verify it against a real repo**, rather than reasoning about what the
+instruction would cause — [docs/evaluating-a-change.md](docs/evaluating-a-change.md).
+
+## Shipping
+
+`/ship` owns the procedure: build, commit, rebase, version bump, land on `main`,
+confirm the CI tag. Bump the minor version in
+`plugins/emotive/.claude-plugin/plugin.json` for anything that should ship — without
+one, `claude plugin update` reports "already at the latest version" even when `main`
+has new commits. An install delivers `plugins/emotive/` and nothing else, so a
+change entirely outside it lands without a bump or a tag; the README still goes
+public on `main`.
+
+Nothing locks `main`, and two sessions in two worktrees can reach `/ship` at once.
+The failure is not the conflict, which git refuses safely; it is the version number,
+which the skill derives off `origin/main` *after* the rebase for that reason. Never
+tag by hand either: a cloud session cannot push `refs/tags/*` at all, so a tag step
+in the local workflow is one more thing that silently only works from a laptop.
+
+This machine runs the installed plugin, not a symlink into the repo, so an edit here
+is not live until `/ship` lands it and `claude plugin update` fetches it.
+`claude --plugin-dir plugins/emotive` loads the working tree for one session to try
+it first. Never a symlink *and* the plugin — see
 [docs/hook-injection.md](docs/hook-injection.md) for the one broken combination.
-
-Landing that bump on `main` tags the release from CI. Never tag by hand: a cloud
-session cannot push `refs/tags/*` at all, so a tag step in the local workflow is
-one more thing that silently only works from a laptop.
-
-An emoji is two columns wide, and a variation selector is zero but widens the
-character before it, so a table padded by character count comes out ragged.
-`build.sh` pads the glossary by display width in both places it appears, so
-neither is ever typed; a table written by hand elsewhere needs the same
-arithmetic, or prettier's.
-
-The README shows a prefix as a bare emoji — 📚, never `📚 `; the backticks and the
-trailing space belong to `context/session-titles.md`, where a session reading it is
-about to set a title. `build.sh` keeps two row lists for that, parsed and stripped,
-padded separately — a check wanting the source's own spelling must read the
-unmutated one, which an earlier coverage check got wrong and matched nothing.
-
-`AskUserQuestion` caps a question at four options and a call at four, so a wide ask
-is grouped `multiSelect` questions in one call — one dialog, not three interruptions.
-
-**A project adopting this convention has no emoji in it yet**, so nothing the
-install decides can come from grepping a repo for prefix characters — that grep is
-empty by definition on a first install, and empty must never read as an answer.
-Candidates come from what the repo contains: its scripts, skill files,
-`package.json`, CI config. The grep has one job, reconciling a repo that already
-adopted the convention.
 
 ## The vocabulary is shared, not invented here
 
 The glossary came from the sibling repos that use it — `karabiner` and `axshot`
 first, then `github-triage`, `email-filter-builder`, `a-thousand-worlds`, `regard`
-and `blunt`, whose `AGENTS.md` files still hold field copies.
-`~/projects/karabiner/docs/workflow.md` holds the original reasoning.
+and `blunt`. `~/projects/karabiner/docs/workflow.md` holds the original reasoning.
+All but `blunt` have been swept; `blunt/AGENTS.md` still holds a field copy of the
+table.
 
-Those copies are what the hook makes unnecessary, and the sweep is a subtraction,
+A field copy is what the hook makes unnecessary, and cutting one is a subtraction,
 not a rewrite: cut the rows and the generic prose, keep only what answers the repo.
 Until a repo is swept it carries the glossary twice, which costs tokens but
-conflicts with nothing. **Never run the target's own `ship` skill for a sweep** —
-a sibling's gates install apps and drive the real keyboard, which is not what a
-docs-only change should cost. [docs/sweep.md](docs/sweep.md) has that and the rest
-of the procedure.
+conflicts with nothing. Once swept, changing the meaning of a prefix costs one edit
+here instead of a pass over every repo — that is the whole reason the glossary moved
+into a hook. [docs/sweep.md](docs/sweep.md) has the procedure and what it can
+destroy, starting with never running the target's own `ship` skill.
 
-Once swept, changing the meaning of a prefix costs one edit here instead of a
-pass over every repo. That is the whole reason the glossary moved into a hook.
-Adding a row costs nothing anywhere, since an unused row is inert by design.
-
-**`regard` won the argument about `🚀 `.** It held that the prefix names a result
-and must not go on until the push lands, against a glossary that said to set every
-prefix optimistically; the glossary changed to match rather than overruling it. So
-the divergence has flipped: the repos to fix in a sweep are the ones still setting
-`🚀 ` before their gates, and `regard` needs no departure written down. A repo may
-narrow a row, never invert one — but a reasoned inversion is evidence about the
-convention, so read the argument before assuming the repo is wrong.
-
-Say a prefix is **set in the response that enters the stage** — never "by hand",
-which reads as something the user does when every setter is an agent. The
-distinction the wording has to carry is whether a skill owns the stage and
-re-reads it each run, or a response sets it inline from an instruction it has to
-remember.
-
-Name a stage by what happens in it, never by a skill only this machine has. The
-`📚 ` row said "the response that invokes `learn`", and `learn` is a user-level
-skill nobody else has — so the injected copy names the pass instead, and reads the
-same in any project.
-
-## Shipping while another session is shipping
-
-Nothing locks `main`, and two sessions in two worktrees can reach `/ship` at once. The
-failure is not the conflict, which git refuses safely; it is the **version number**. A bump
-chosen before the rebase is off a stale `main`, and if the other session lands first its tag
-already holds that number. Derive it from `git show origin/main:…plugin.json` after the
-rebase — not from the working tree, which an abandoned attempt may have bumped already.
-
-`main` also moves *during* a resolve, so re-check immediately before the push. Four rebases
-in one ship is a normal day when another session is active, and each is cheap; a
-force-push to `main` to avoid one never is.
-
-The rebase can replace `/ship` itself — a concurrent ship inverted the `🚀 ` rule here
-mid-procedure. Re-read the skill after it, not only the files the build parses.
-
-Where the other session has taken the product somewhere incompatible — a different design,
-not a textual conflict — that is not a merge to resolve. Say what each side did, put the
-choice to the user, and fold in what their answer keeps; `--ask` survived that way, pointed
-at the local half after the hook made its original job meaningless.
-
-## Evaluating a change
-
-Do not reason about what an instruction "would" cause and call that a result.
-Run the skill against a real repo — a scratch `git init` for the blank-project
-path, a clone of a sibling repo for the revise-in-place path — and read what it
-wrote. A section that reads well here and lands badly there is the failure this
-repo exists to catch. A clone carries only the skills a repo commits: a
-gitignored `.claude/` clones away the half that matters most.
-
-Check both halves: the section in the instructions file, and the skills the
-install claims to have wired. A `🚀 ` row with no owner is the bug that keeps
-coming back; its mirror is a skill nobody wrote down, so grep every skill file
-for the prefix characters rather than trusting prose about which skill sets
-what — the prose goes stale and the skill is what runs.
-
-For the injected half, `claude --plugin-dir plugins/emotive` loads the working
-tree for one session. The installed plugin loads as well, so a run without the
-flag is no control — verify an edit by making its wording distinctive and checking
-that wording arrives. Read what the session actually did with its title, not what
-the file says it should have — the published hooks reference is wrong about whether
-`SessionStart` can inject at all, so neither it nor the file settles the question.
-[docs/hook-injection.md](docs/hook-injection.md) has the mechanism, the silent
-`additionalContext` trap, and the alternatives already rejected.
-
-`--ask` cannot be tested unattended: a headless run has nobody to answer the dialog, so
-`-p` exercises the inferring path only. Test it by hand, and read where its options came from.
-
-## Reporting
-
-Never suggest restarting Claude Code. After `/ship`, end on the last bullet — no
-"Done.", no "Ready to …"; nothing is waiting on the user.
+**A repo may narrow a row, never invert one — but `regard` won the argument about
+`🚀 `.** It held that the prefix names a result and must not go on until the push
+lands, against a glossary that said to set every prefix optimistically; the glossary
+changed to match rather than overruling it. So the divergence has flipped: the repos
+to fix in a sweep are the ones still setting `🚀 ` before their gates. A reasoned
+inversion is evidence about the convention — read the argument before assuming the
+repo is wrong.
 
 ## Git
 
 Conventional-commit subjects (`docs:`, `feat:`, `fix:`), matching the history. Work
 happens on a branch in a worktree and lands on `main`; `/ship` is that procedure.
+
+## Reporting
+
+Never suggest restarting Claude Code. After `/ship`, end on the last bullet — no
+"Done.", no "Ready to …"; nothing is waiting on the user.
 
 ## Session titles
 
@@ -187,8 +128,9 @@ here — and it governs a session working on it like any other. These are this r
 - `💾 `, `🔍 `, `🔒 ` and `🔓 ` are inert here — nothing in this repo is shared
   across sessions. They arrive anyway; a repo making an exception of itself would
   be arguing against its own product.
-- `📚 ` is for extracting learnings into this file, the README or the skills.
-  Nothing else sets it, so the response that starts that pass puts it on.
+- `📚 ` is for extracting learnings into this file, the README or the skills. Only
+  that pass sets it, and it goes on in the response that starts one — whether the
+  pass is driven by a skill or run inline.
 
 A session here is reading the glossary it is editing. A change takes effect in the
 *next* session, or in one started with `--plugin-dir plugins/emotive` — never

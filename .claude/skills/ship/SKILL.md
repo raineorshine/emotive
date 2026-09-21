@@ -16,7 +16,14 @@ Run the whole sequence unattended. Never stop and ask the user to merge, tag, or
 2. Commit all changes.
 3. `git fetch origin && git rebase origin/main` — resolve any conflicts, then run
    `./build.sh` again. A clean rebase still moves the files the build parses, so a
-   check this branch added can meet a format `main` changed under it.
+   check this branch added can meet a format `main` changed under it. Re-read this
+   skill afterwards too, not only the files the build parses: a concurrent ship once
+   inverted the `🚀 ` rule mid-procedure. Four rebases in one ship is a normal day
+   when another session is active, and each is cheap.
+
+   Where the other session has taken the product somewhere incompatible — a different
+   design, not a textual conflict — that is not a merge to resolve. Say what each side
+   did, put the choice to the user, and fold in what their answer keeps.
 4. Bump the minor version in `plugins/emotive/.claude-plugin/plugin.json` — unless the
    ship touches nothing under `plugins/emotive/`, in which case skip this step and
    steps 7 and 8, and say the ship carried no release. An install delivers that
@@ -71,8 +78,9 @@ there is nothing to undo; check the title still says what is true now (`📦 ` f
 `⏳ ` if the work goes back to implementing, `🚙 ` if it waits on the user) and correct it if not.
 Say nothing about it either way.
 
-A change to what a prefix *means* is not finished by this ship: the sibling repos carry field copies
-of the glossary (see AGENTS.md → The vocabulary is shared, not invented here). Say which repos still
-carry the old wording rather than reporting the change as landed everywhere.
+A change to what a prefix *means* is not finished by this ship: an unswept sibling repo still
+carries a field copy of the glossary, and AGENTS.md → The vocabulary is shared, not invented here
+says which. Check that list rather than trusting it, and say which repos still carry the old wording
+rather than reporting the change as landed everywhere.
 
 Report the commit subject, the new version, and whether the plugin updated. Skip narration.

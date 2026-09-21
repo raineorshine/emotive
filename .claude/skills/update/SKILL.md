@@ -13,7 +13,8 @@ Apply this instruction to the skill:
 $ARGUMENTS
 
 Put it in the right half — there are three, and a rule in the wrong one either reaches nobody or
-reaches everybody unresolved.
+reaches everybody unresolved. (A rule about working on *this* repo is none of the three; it goes in
+`AGENTS.md`, which is this repo's own instructions rather than anything the plugin ships.)
 
 | file | holds |
 |---|---|
@@ -22,12 +23,11 @@ reaches everybody unresolved.
 | `plugins/emotive/skills/emotive-setup/template.md` | the shape of the local half: what lands in one repo's own instructions, hazard paragraphs included |
 
 The test for the first: would this sentence read the same in a repo you have never seen? If it
-names a command, a branch or a resource, it belongs in `template.md` instead. The injected file
-ships as-is, and `./build.sh` fails on a `<placeholder>` in its glossary for that reason.
+names a command, a branch or a resource, it belongs in `template.md` instead.
 
 Match the existing style: one claim per paragraph, the reason on the same line as the rule, no
-restructuring beyond what the change needs. Keep the glossary whole — a prefix a project cannot
-reach is inert by design, not a candidate for removal.
+restructuring beyond what the change needs. `docs/glossary.md` has the wording rules for the
+injected file — including why the glossary stays whole and never carries a placeholder.
 
 Run `./build.sh` when the table changed — it re-pads the glossary in place and copies it into the
 README. Report what landed as bullets.
