@@ -1,15 +1,14 @@
 # emotive
 
-A session-title status convention for Claude Code, and the skills that install
-it in a project. A single leading emoji on a session's title says what that
-session is doing while it is doing it, so the chat sidebar answers "which of
-these is mid-ship" — or mid-write, or waiting on me — without opening any of
-them.
+A session-title status convention for Claude Code. A single leading emoji on a
+session's title says what that session is doing while it is doing it, so the chat
+sidebar answers "which of these is mid-ship" — or mid-write, or waiting on me —
+without opening any of them.
 
-The sidebar already shows a status dot and a branch glyph, and neither can be
-set from a session; `set_session_title` takes a title string and nothing else.
-The prefix is the only lever, and it is spent on what the app cannot know: where
-the work stands.
+The sidebar already shows a status dot and a branch glyph, and neither can be set
+from a session; `set_session_title` takes a title string and nothing else. The
+prefix is the only lever, and it is spent on what the app cannot know: where the
+work stands.
 
 ## The glossary
 
@@ -24,32 +23,39 @@ the work stands.
 | 🔒     | holding the single slot only one session can use at a time                               |
 | 💾     | writing to a live resource every session shares right now                                |
 | 📦     | done on the branch — gated and shippable without re-running anything                     |
-| 🚀     | shipping to `main`, or shipped                                                           |
+| 🚀     | shipping to the default branch, or shipped                                               |
 | 🚙     | parked: the work is sound and waiting on the user (a decision, a credential, a click)    |
 | ⏲️     | waiting on a task scheduled for later — nothing to do until it fires                     |
 | 🪦     | dead end — kept for the findings, not to resume                                          |
-| 📚     | extracting learnings into `AGENTS.md`, `README.md` or the skills                         |
+| 📚     | extracting learnings into the instruction files                                          |
 
 <!-- glossary:end -->
 
-The whole glossary is installed in every project, including rows for stages a
-project has no way to reach. An unused row is inert — it costs a line and
-settles the vocabulary before the workflow that needs it arrives, rather than
-leaving it to be invented under pressure by whichever session gets there first.
+Every row applies in every project, including rows for stages a project has no
+way to reach. An unused row is inert — it costs nothing and settles the
+vocabulary before the workflow that needs it arrives, rather than leaving it to
+be invented under pressure by whichever session gets there first.
 
-A project that wants fewer says so out loud, through
-`/emotive-setup-interactive`: it asks which rows to install, and the section it
-writes says on its face that it is a chosen subset, so a later `/emotive-setup`
-corrects the rows it has rather than quietly filling the gaps back in.
+## How it arrives
 
-## What it installs
+A `SessionStart` hook prints the glossary into every session. There is nothing to
+install per project and nothing to keep in sync: one file is the convention, and
+editing it changes what every session in every repo reads next time it starts.
 
-- **The `Session titles` section** in the project's agent instructions —
-  `AGENTS.md` where there is one, `CLAUDE.md` where that is the only file, and
-  both (with a `CLAUDE.md` that imports `AGENTS.md`) in a blank project.
-- **The rows, tailored.** Which branch 🚀 ships to, what the gate is that
-  makes a branch 📦, what the project waits on a user for, what is shared
-  across worktrees and therefore worth warning other sessions about.
+## What the skill wires
+
+The hook cannot know what a row means in one particular repo, and an injected
+rule competes with everything else in context at the moment it matters. So
+`/emotive-setup` installs the other half, in the project's own agent
+instructions and skills:
+
+- **The local half of the section** — which branch 🚀 ships to, what gate
+  makes a branch 📦, what the project waits on a user for, which stages a
+  cloud session cannot reach. Never the glossary again; the hook has that.
+- **The hazard paragraph**, where the project has a shared resource — a live
+  database, a real account, a deploy target, a dev-server port. 💾 is the one
+  prefix another session acts on, and it earns that only where a paragraph names
+  the repo's own commands.
 - **🚀 wired into the project's `ship` skill** — set before the gate, restored
   if the ship does not land. A project without a `ship` skill gets a minimal one,
   because every project ends up with one; a new one just has not written it yet.
@@ -58,14 +64,14 @@ corrects the rows it has rather than quietly filling the gaps back in.
 ## Install
 
 ```sh
-claude plugin marketplace add raineorshine/emotive-setup
-claude plugin install emotive-setup@emotive
+claude plugin marketplace add raineorshine/emotive
+claude plugin install emotive@emotive
 ```
 
 For a one-off session, skipping install:
 
 ```sh
-claude --plugin-dir path/to/emotive-setup/plugins/emotive
+claude --plugin-dir path/to/emotive/plugins/emotive
 ```
 
 Upgrade:
@@ -74,29 +80,22 @@ Upgrade:
 claude plugin update emotive
 ```
 
+The glossary is live from the next session started after install. Nothing else is
+required to use it.
+
 ## Use
 
 ```
 /emotive-setup
 ```
 
-Run it in the project that should adopt the convention. It reads the repo
-first — what ships and to where, what the gate is, what is shared across
-worktrees — then writes the section, wires the skills, and lands the change.
-Running it again revises the section in place rather than appending a second
-copy.
-
-```
-/emotive-setup-interactive
-```
-
-The same install, with the glossary chosen instead of assumed: twelve
-checkboxes in one dialog, and the unchecked prefixes are left out of the table
-entirely. Everything else still comes from the repo — the branch, the gate, the
-shared resource — because those are read, not decided. Two things it will not
-do on your say-so: drop a prefix one of the project's own skills already sets,
-since the skill is what runs, and install an empty table, since an empty
-selection is a refusal.
+Optional, and per project. Run it where the convention should say something
+specific — a repo with a gate worth naming, a shared resource worth warning
+about, or a `ship` skill that should set 🚀 itself. It reads the repo first,
+then writes only what is local to it and wires the skills that own a prefix.
+Running it again revises that section in place rather than appending a second
+copy; run against a repo still carrying the full pre-hook table, it cuts the
+table back to the local half.
 
 ## License
 

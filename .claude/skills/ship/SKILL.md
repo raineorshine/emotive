@@ -28,15 +28,16 @@ Run the whole sequence unattended. Never stop and ask the user to merge, tag, or
    minute while Actions runs.
 8. `claude plugin marketplace update emotive && claude plugin update emotive`
    — without the marketplace refresh, the cached listing reports the pre-push version as latest.
-   Skip this where the plugin is not installed: a machine running the skill through the
-   `~/.claude/skills/emotive-setup` symlink already has the new files, and the commands report
-   an unknown plugin. Say which of the two it was.
-9. Add the session's learnings to `AGENTS.md`, the README and the skills. A shipped
-   release is the moment its lessons are worth writing down, and it needs no ask — it is
-   the last stage of shipping. Skip it only when a learning pass is what invoked this
-   ship (one ends in a ship of its own), or the two would call each other forever. Put
-   `📚 ` on the title as you start — nothing else sets it — and `🚀 ` back when it finishes;
-   say nothing about either. If there is nothing worth recording, say so in one line.
+   Skip this where the plugin is not installed, and say so — but flag it rather than passing
+   over it: the `SessionStart` hook that carries the glossary only runs for an installed
+   plugin, so a machine with the `~/.claude/skills/emotive-setup` symlink and no plugin has
+   the new skill and none of the new glossary.
+9. Invoke the `learn` skill. A shipped release is the moment its lessons are worth
+   writing down, and it needs no ask — it is the last stage of shipping. Skip it only
+   when `learn` is what invoked this ship (its own procedure ends in one), or the two
+   would call each other forever. Put `📚 ` on the title as you invoke it — the
+   user-level `learn` does not set one itself — and `🚀 ` back when it finishes; say
+   nothing about either. If it finds nothing worth recording, say so in one line.
 10. Print `🚀 Shipped`
 
 If step 7 finds no tag, say which version is untagged; do not report a clean ship.

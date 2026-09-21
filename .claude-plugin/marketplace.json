@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "emotive",
-      "description": "Installs the emotive session-title status convention in a project's agent instructions and skills.",
+      "description": "Injects the emotive session-title status convention at session start, and wires its prefixes into a project's own skills.",
       "source": "./plugins/emotive"
     }
   ]

@@ -1,55 +1,61 @@
 # AGENTS.md
 
-Emotive: a session-title status convention for Claude Code, shipped as the
-`emotive-setup` and `emotive-setup-interactive` skills in a plugin named
-`emotive`. The whole product is one procedure and the `template.md` it installs
-from; the interactive skill is a front door onto it, and the rest is packaging.
+Emotive: a session-title status convention for Claude Code, shipped as a plugin
+named `emotive`. The product is in two halves. The **glossary** —
+`context/session-titles.md` — is injected into every session by a `SessionStart`
+hook, so it needs no install and is identical everywhere. The **wiring** — the
+`emotive-setup` skill — installs only what a hook cannot know: what a row means
+in one particular repo, and the prefix changes its own skills have to set.
+Everything else is packaging.
+
+The split is the whole design. A rule that reads the same in every repo goes in
+the injected half, where one edit reaches every session. A rule made of a repo's
+own commands goes in the skill's half, where it is written into that repo once.
 
 ## Layout
 
 | path | what |
 |---|---|
-| `plugins/emotive/skills/emotive-setup/SKILL.md` | the install procedure — what the skill does when it runs |
-| `plugins/emotive/skills/emotive-setup/template.md` | the convention itself: the text that lands in a project, between its `BEGIN`/`END` markers |
-| `plugins/emotive/skills/emotive-setup-interactive/SKILL.md` | the same install with the glossary chosen by the user — the only skill that changes which rows land |
+| `plugins/emotive/context/session-titles.md` | the glossary — the actual product, injected into every session |
+| `plugins/emotive/hooks/hooks.json` | `SessionStart` hook that cats it into context |
+| `plugins/emotive/skills/emotive-setup/SKILL.md` | the wiring procedure — what the skill does when it runs |
+| `plugins/emotive/skills/emotive-setup/template.md` | the shape of the local half: what lands in one repo's instructions |
 | `plugins/emotive/.claude-plugin/plugin.json` | version; gates `claude plugin update` |
 | `.claude-plugin/marketplace.json` | the marketplace listing that serves the plugin |
-| `build.sh` | syncs the glossary table from `template.md` into the README |
+| `build.sh` | normalizes the glossary table and copies it into the README |
 | `.github/workflows/tag-release.yml` | tags `v<version>` when a bump lands on `main` |
 
-## Editing the skill
+## Editing the convention
 
-1. Edit `SKILL.md` (how the install runs) or `template.md` (what it installs).
-   A rule an installing session follows goes in `SKILL.md`, a rule the
-   *installed* project follows goes in `template.md`.
-   `emotive-setup-interactive/SKILL.md` is a diff, not a fork: it defers to
-   `emotive-setup` for the procedure, and two copies of a step is the failure
-   mode. Membership lives in one of them — `emotive-setup` never drops a row or
-   fills a subset's gaps; the interactive skill is the only thing that does.
-2. Run `./build.sh` — the README embeds the glossary table between
-   `glossary:begin` / `glossary:end` markers. Never hand-edit that block; it
-   will be overwritten. The build fails on a placeholder it has no generic
-   wording for, so a new `<placeholder>` in the table needs a line in its
-   `GENERIC` map. It also fails when the interactive skill's three groups stop
-   covering the glossary exactly — a prefix in the table that nobody can check is
-   the `🚀 `-row-with-no-owner bug wearing a different hat.
-3. Bump the minor version in `plugins/emotive/.claude-plugin/plugin.json` for
-   anything that should ship; `/ship` does this. Without a bump, `claude plugin
-   update` reports "already at the latest version" even when `main` has new
-   commits. An install delivers `plugins/emotive/` and nothing else, so a change
-   entirely outside it lands without a bump or a tag — bumping would announce an
-   update that changes nothing installed. The README still goes public on `main`.
+1. Pick the half. `context/session-titles.md` holds what every session reads —
+   the rows, and every rule that is true regardless of repo. `SKILL.md` holds
+   what an installing session does. `template.md` holds the shape of what lands
+   in one repo's instructions. A rule in the wrong half either reaches nobody or
+   reaches everybody unresolved.
+2. Run `./build.sh` — it re-pads the glossary in `context/session-titles.md` and
+   copies it into the README between `glossary:begin` / `glossary:end` markers.
+   Never hand-edit that block; it will be overwritten. The build fails on a
+   `<placeholder>` in the glossary, because that file ships as-is: a placeholder
+   there would reach every session unresolved. Tailored wording belongs in
+   `template.md`.
+3. Bump the minor version in `plugins/emotive/.claude-plugin/plugin.json`
+   for anything that should ship. Without a bump, `claude plugin update` reports
+   "already at the latest version" even when `main` has new commits. `/ship`
+   does this. An install delivers `plugins/emotive/` and nothing else, so a
+   change entirely outside it — this file, the README, the repo's own skills —
+   lands without a bump and without a tag: bumping would announce an update that
+   changes nothing on an installed machine. That is about the plugin channel
+   alone. The README is the package's front page and is public the moment it
+   lands on `main`, which is where someone deciding whether to install reads it.
 
-This machine runs the installed plugin, not a symlink into the repo, so an edit
-here is not live until `/ship` lands it and `claude plugin update` fetches the
-new version — step 8 of `/ship` is that fetch. The alternative is a symlink per
-skill in `~/.claude/skills/`, pointing at the main checkout rather than a
-worktree, live with no build step but dangling until the branch adding it lands.
-Never both, or the skill is listed twice.
-
-`AskUserQuestion` caps a question at four options and a call at four, so "one
-large multiselect over all twelve prefixes" is three grouped `multiSelect`
-questions in one call — one dialog, not three interruptions.
+The skill half can be symlinked — `~/.claude/skills/emotive-setup` pointing at
+`plugins/emotive/skills/emotive-setup` makes an edit live in the next session
+with no install step. The glossary half cannot: the hook only runs for an
+installed plugin, so a machine with the symlink and no plugin gets the skill and
+no injected glossary, which is the one combination that reads as the convention
+being broken. Install the plugin and drop the symlink; `claude --plugin-dir
+plugins/emotive` loads the working tree for one session when an edit needs
+trying before it ships.
 
 Landing that bump on `main` tags the release from CI. Never tag by hand: a cloud
 session cannot push `refs/tags/*` at all, so a tag step in the local workflow is
@@ -57,37 +63,43 @@ one more thing that silently only works from a laptop.
 
 An emoji is two columns wide, and a variation selector is zero but widens the
 character before it, so a markdown table padded by character count comes out
-ragged. `build.sh` pads the generated glossary by display width; a table written
-by hand here needs the same arithmetic, or prettier's.
+ragged. `build.sh` pads the glossary by display width in both places it appears,
+so neither is ever typed; a table written by hand elsewhere in this repo needs
+the same arithmetic, or prettier's.
 
-The README shows a prefix as a bare emoji — 📚, never `📚 `. The backticks and
-the trailing space belong to `template.md`, where a session reading it is about
-to set a title. `build.sh` strips them as it parses, mutating its rows on the way
-to the README, so a check wanting the template's own spelling has to read it
-before that strip — the coverage check landed after it and matched nothing.
+The README shows a prefix as a bare emoji — 📚, never `📚 `. The code formatting
+and the trailing space belong to `context/session-titles.md`, where a session
+reading it is about to set a title; `build.sh` strips them from the README's copy
+of the table, which is why the two are padded separately, and prose in the README
+follows the same rule.
 
 ## The vocabulary is shared, not invented here
 
 The glossary came from the sibling repos that use it — `karabiner` and `axshot`
 first, then `github-triage`, `email-filter-builder`, `a-thousand-worlds`,
-`regard` and `blunt` — and their `AGENTS.md` files are the field copies. A
-change to the meaning of a prefix is a change to all of them: make it here, then
-carry it across, or the sidebar stops reading the same way from one repo to the
-next. `~/projects/karabiner/docs/workflow.md` holds the original reasoning.
+`regard` and `blunt` — and their `AGENTS.md` files still hold field copies of
+it. `~/projects/karabiner/docs/workflow.md` holds the original reasoning.
 
-Adding a row costs a line in every project and nothing else, since an unused row
-is inert by design. Changing or removing one costs a sweep.
+Those copies are what the hook makes unnecessary, and the sweep that removes
+them is a subtraction, not a rewrite: cut the rows and the generic prose, keep
+only what answers the repo — its gate, its branch, its shared resources. Until a
+repo has been swept it carries the glossary twice, which costs tokens and reads
+as duplication but conflicts with nothing.
+
+Once swept, changing the meaning of a prefix costs one edit here instead of a
+pass over every repo. That is the whole reason the glossary moved into a hook.
+Adding a row costs nothing anywhere, since an unused row is inert by design.
 
 Say a prefix is **set in the response that enters the stage** — never "by hand",
-which reads as something the user does when every setter is an agent. What the
-wording must carry is whether a skill owns the stage and re-reads it each run, or
-a response sets it inline from an instruction it has to remember.
+which reads as something the user does when every setter is an agent. The
+distinction the wording has to carry is whether a skill owns the stage and
+re-reads it each run, or a response sets it inline from an instruction it has to
+remember.
 
 Name a stage by what happens in it, never by a skill only this machine has. The
 `📚 ` row said "the response that invokes `learn`", and `learn` is a user-level
-skill, so every project that installed the section inherited a reference it
-could not resolve. A skill the install wires is fair to name — `ship`, or the one
-that takes a lock — because the install either finds it or writes it.
+skill nobody else has — so the injected copy names the pass instead, and reads the
+same in any project.
 
 ## Evaluating a change
 
@@ -103,6 +115,14 @@ install claims to have wired. A `🚀 ` row with no owner is the bug that keeps
 coming back; its mirror is a skill nobody wrote down, so grep every skill file
 for the prefix characters rather than trusting prose about which skill sets
 what — the prose goes stale and the skill is what runs.
+
+For the injected half, `claude --plugin-dir plugins/emotive` loads the working
+tree for one session, so a run with the flag and a run without differ by exactly
+that. Read what the session actually did with its title, not what the file says
+it should have. A plugin `SessionStart` hook must print to stdout — its JSON
+`hookSpecificOutput.additionalContext` is dropped for plugins and reported as a
+success (anthropics/claude-code#16538), so a hook that looks correct and reaches
+nobody is the failure mode to watch for.
 
 ## Testing your own output
 
@@ -122,78 +142,24 @@ procedure.
 
 ## Session titles
 
-A lifecycle prefix on the session title says what a session is doing while it is
-doing it, so the sidebar answers "which of these is mid-ship" without opening any
-of them. The sidebar already shows a status dot (running / awaiting input / idle)
-and a branch glyph for worktree sessions; neither can be set from here —
-`set_session_title` takes a title string and nothing else. So a **single leading
-emoji on the title** is the only lever, and it is spent on what the app cannot
-know: where the work stands.
+The glossary arrives from this plugin's own `SessionStart` hook, so it is not
+repeated here. These are the parts specific to this repo.
 
-| Prefix | Means |
-|---|---|
-| `🎨 ` | brainstorming or designing with the user — exploring, sketching, deciding what to build |
-| `⏳ ` | implementing — the weakest of them; every other prefix takes precedence |
-| `🔍 ` | auditing against live state — a dry run, or the plan it printed, with a write to follow |
-| `🔓 ` | about to take that slot — queued or blocked on it — or just released it |
-| `🔒 ` | holding a single slot only one session can use at a time |
-| `💾 ` | writing to a live resource every session shares |
-| `📦 ` | done on the branch — `./build.sh` clean and shippable without re-running anything |
-| `🚀 ` | shipping to `main`, or shipped |
-| `🚙 ` | parked: the work is sound and waiting on the user (a decision, a review) |
-| `⏲️ ` | waiting on a task scheduled for later — nothing to do until it fires |
-| `🪦 ` | dead end — kept for the findings, not to resume |
-| `📚 ` | extracting learnings into `AGENTS.md`, the README or the skills |
+- `📦 ` means `./build.sh` ran clean and the version is bumped — shippable
+  without re-running anything.
+- `🚀 ` ships to `main`, which the marketplace serves; `/ship` is that procedure
+  and sets the prefix itself, as its step 0.
+- `🚙 ` is what this repo waits on a user for: a decision about the convention,
+  or a review of a branch.
+- `💾 `, `🔍 `, `🔒 ` and `🔓 ` are inert here — nothing in this repo is shared
+  across sessions. They still arrive in every session, which is the rule this
+  repo teaches; a repo that made an exception of itself would be arguing against
+  its own product.
+- `📚 ` is for extracting learnings into this file, the README or the skills. The
+  `learn` skill here is the user-level one and sets no session title, so the
+  response that invokes it puts `📚 ` on.
 
-`🔍 `, `🔒 `, `🔓 ` and `💾 ` are inert here — nothing in this repo is shared
-across sessions. They are listed because the glossary ships whole, which is the
-rule this repo teaches; a repo that made an exception of itself would be arguing
-against its own product.
-
-**Handing back is itself a stage.** A response that closes on something for the
-user to do — a decision, a review, a look at the branch — is a park, and `🚙 `
-goes on before that response, since the idle dot cannot tell "waiting on you"
-from "given up on".
-
-**A design loop is not a park.** `🎨 ` holds through brainstorming and outranks
-`🚙 ` while it does: the back-and-forth _is_ the stage, so a park prefix on every
-turn of it marks the session as blocked without saying on what. It becomes `🚙 `
-once the design is settled and waiting on a decision, and `⏳ ` when that
-decision comes. No skill here sets it; it goes on in the response that opens the
-loop.
-
-**Never mention a prefix in the response** — not what it was set to, not that it
-was already right, not that it was left alone. It is sidebar state; say nothing
-about it unless asked.
-
-These are **stages, not flags**: exactly one prefix at a time, and setting a new
-one replaces whatever was there — only one reads cleanly at sidebar width, and
-`🚀 ` after `📦 ` is noise, since the later stage implies the earlier. **Every
-title carries one**, and a prefix comes off only when another takes its place: a
-bare title says nothing about the session, and the sidebar cannot tell it apart
-from a chat that never had a stage at all. A session with nothing left to do
-keeps the prefix of the last stage it reached. The harness names a session, so
-every session starts without a prefix: putting the first one on that inherited
-title is part of the first response, not something to wait for a stage change to
-prompt.
-
-Set a prefix **optimistically** — when the stage _starts_, not when it succeeds —
-and correct it if the stage falls over. A title that only becomes true at the end
-is blank for the whole stretch the sidebar is there to describe. `🚀 ` is set by
-`/ship` as its first step, before `./build.sh`, and `/ship` puts back what is
-true instead if the ship does not land — `📦 ` for a branch that built clean,
-`⏳ ` if the work goes back to implementing, `🚙 ` if it is waiting on the user —
-so it stays true on its own. `📚 ` goes on in the response that starts
-extracting the session's learnings, before anything is read: whatever carries
-out the extraction will not set a title itself. The rest are set in the response
-that enters the stage (`mcp__ccd_session_mgmt__set_session_title`), and nothing
-reconciles a title against reality: an abandoned session keeps whatever prefix
-it had.
-
-**Ask which session this is before renaming one.** `get_session "self"` is the
-only answer, and it changes under a fork: a forked session carries the whole
-transcript, the id it read earlier in it, and a different id of its own, so a
-rename that reuses the remembered one retitles the session it forked _from_. A
-fork also starts in the worktree of the session it forked from, and nothing stops
-a branch being checked out there, which moves that worktree under the other
-session's feet; put it back on the branch it was on once the work has landed.
+A session in this repo is reading the glossary it is editing, and only if the
+plugin is installed on the machine — the symlink alone does not bring the hook.
+A change to a rule takes effect in the *next* session, or in one started with
+`--plugin-dir plugins/emotive`, never retroactively in the session that wrote it.
