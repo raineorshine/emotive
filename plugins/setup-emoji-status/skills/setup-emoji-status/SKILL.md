@@ -15,6 +15,37 @@ The convention itself is `template.md`, beside this file. Read it before writing
 carries the installed text between its `BEGIN`/`END` markers, and the reasoning for the parts that
 are optional.
 
+## The glossary
+
+Every one of these lands in every project. The wording in each row is tailored — the branch `🚀 `
+ships to, the gate that makes a branch `📦 `, the resource `💾 ` warns about — but no row is
+dropped for a project that cannot reach its stage yet. An unused row is inert: it costs a line and
+settles the wording before the workflow that needs it arrives.
+
+| Prefix | Means                                                             | Set by                                                     |
+| ------ | ----------------------------------------------------------------- | ---------------------------------------------------------- |
+| `🎨 `  | brainstorming or designing with the user                          | the response that opens the design loop, or a `plan` skill |
+| `⏳ `  | implementing                                                      | the response                                               |
+| `🔍 `  | auditing against live state, with a write to follow               | the response                                               |
+| `🔓 `  | about to take the single slot — queued, blocked, or just released | the skill that owns the lock                               |
+| `🔒 `  | holding the single slot                                           | the skill that owns the lock                               |
+| `💾 `  | writing to the live resource every session shares                 | the response                                               |
+| `📦 `  | done on the branch — gated, shippable without re-running          | the gate skill, otherwise the response                     |
+| `🚀 `  | shipping to the default branch, or shipped                        | the `ship` skill, as its step 0                            |
+| `🚙 `  | parked: the work is sound and waiting on the user                 | the response that hands back                               |
+| `⏲️ `   | waiting on a task scheduled for later                             | the response                                               |
+| `🪦 `  | dead end — kept for the findings, not to resume                   | the response                                               |
+| `📚 `  | extracting learnings into the instruction files                   | the response that invokes `learn`                          |
+
+Precedence, when two could apply: a hazard (`💾 `, `🔍 `, `🔒 `) outranks a park, because the
+warning to other sessions comes before the one to the user, who is already reading the response.
+`🚙 ` outranks `⏲️ `, because a person can act and a clock cannot. `🎨 ` outranks `🚙 ` for as
+long as the design loop is live. `⏳ ` loses to everything.
+
+"Set by" is the difference between a prefix that stays true and one that goes stale: a skill re-reads
+its own procedure every run, while a response only sets what the instructions remembered to ask for.
+Step 3 is where that half is installed.
+
 ## 0. Put `⏳ ` on this session first
 
 `mcp__ccd_session_mgmt__get_session` with `"self"` for the id and title, then `set_session_title`
@@ -68,10 +99,9 @@ instructions file is already held to.
 
 ## 3. Wire the skills that own a prefix
 
-A prefix set in a response goes stale the first time the instruction is skipped; a prefix set by the
-skill that owns the stage stays true on its own, because the procedure re-reads it every run. Edit the skills the repo already has, and write the one missing skill that `🚀 ` cannot do
-without (step 3a). A missing `test` skill is not this skill's job: a repo with no gate has no `📦 `
-to own, and the row says so instead.
+Edit the skills the repo already has, and write the one missing skill that `🚀 ` cannot do without
+(step 3a). A missing `test` skill is not this skill's job: a repo with no gate has no `📦 ` to own,
+and the row says so instead.
 
 - **`ship`** — set `🚀 ` as step 0, before the gates run, replacing whatever prefix was there rather
   than stacking. Add the tail too: if the push fails or the ship is abandoned, the title goes back
@@ -117,9 +147,10 @@ unless a `.github/skills/` tree exists. A blank project gets `.claude/skills/`.
 ## 4. Revise in place, never append a second copy
 
 A repo that already has a session-titles section gets it corrected, not duplicated: reconcile the
-table against what the skills actually set, add the hazard row the repo has grown into, drop a row
-for a workflow it no longer has. Same for a repo that carries a thinner version of the vocabulary
-under another heading — fold it in and keep the heading it already uses.
+table against what the skills actually set, fill in the rows it is missing, and write the paragraph
+for a hazard the repo has grown into. Rows are not dropped — a workflow the repo no longer has
+leaves an inert row, not a gap. Same for a repo that carries a thinner version of the vocabulary
+under another heading: fold it in and keep the heading it already uses.
 
 ## 5. Land it
 
