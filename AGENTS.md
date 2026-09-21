@@ -3,8 +3,7 @@
 Emotive: a session-title status convention for Claude Code, shipped as the
 `emotive-setup` and `emotive-setup-interactive` skills in a plugin named
 `emotive`. The whole product is one procedure and the `template.md` it installs
-from; the interactive skill is a front door onto that procedure, not a second
-copy of it, and everything else is packaging.
+from; the interactive skill is a front door onto it, and the rest is packaging.
 
 ## Layout
 
@@ -21,15 +20,12 @@ copy of it, and everything else is packaging.
 ## Editing the skill
 
 1. Edit `SKILL.md` (how the install runs) or `template.md` (what it installs).
-   The two have different jobs: a rule an installing session follows goes in
-   `SKILL.md`, a rule the *installed* project follows goes in `template.md`.
-   `emotive-setup-interactive/SKILL.md` is the third file and takes only what is
-   different about asking — it defers to `emotive-setup` for the procedure, so a
-   rule that belongs to the install itself goes there and is inherited. Two
-   copies of a step is the failure mode; the interactive skill is a diff.
-   Membership lives in exactly one of them: `emotive-setup` never drops a row,
-   `emotive-setup-interactive` is the only thing that does, and `emotive-setup`
-   revises a subset section as it stands rather than filling its gaps.
+   A rule an installing session follows goes in `SKILL.md`, a rule the
+   *installed* project follows goes in `template.md`.
+   `emotive-setup-interactive/SKILL.md` is a diff, not a fork: it defers to
+   `emotive-setup` for the procedure, and two copies of a step is the failure
+   mode. Membership lives in one of them — `emotive-setup` never drops a row or
+   fills a subset's gaps; the interactive skill is the only thing that does.
 2. Run `./build.sh` — the README embeds the glossary table between
    `glossary:begin` / `glossary:end` markers. Never hand-edit that block; it
    will be overwritten. The build fails on a placeholder it has no generic
@@ -37,29 +33,23 @@ copy of it, and everything else is packaging.
    `GENERIC` map. It also fails when the interactive skill's three groups stop
    covering the glossary exactly — a prefix in the table that nobody can check is
    the `🚀 `-row-with-no-owner bug wearing a different hat.
-3. Bump the minor version in `plugins/emotive/.claude-plugin/plugin.json`
-   for anything that should ship. Without a bump, `claude plugin update` reports
-   "already at the latest version" even when `main` has new commits. `/ship`
-   does this. An install delivers `plugins/emotive/` and nothing else, so a
-   change entirely outside it — this file, the README, the repo's own skills —
-   lands without a bump and without a tag: bumping would announce an update that
-   changes nothing on an installed machine. That is about the plugin channel
-   alone. The README is the package's front page and is public the moment it
-   lands on `main`, which is where someone deciding whether to install reads it.
+3. Bump the minor version in `plugins/emotive/.claude-plugin/plugin.json` for
+   anything that should ship; `/ship` does this. Without a bump, `claude plugin
+   update` reports "already at the latest version" even when `main` has new
+   commits. An install delivers `plugins/emotive/` and nothing else, so a change
+   entirely outside it lands without a bump or a tag — bumping would announce an
+   update that changes nothing installed. The README still goes public on `main`.
 
 This machine runs the installed plugin, not a symlink into the repo, so an edit
 here is not live until `/ship` lands it and `claude plugin update` fetches the
-new version — step 8 of `/ship` is that fetch. The other way to run it is a
-symlink per skill in `~/.claude/skills/`, each pointing at the main checkout
-rather than a worktree, live with no build or install step; even then a new skill
-is not live until the branch that adds it lands, and linking it before then
-leaves a dangling entry in the skill list. The two must not both exist, or the
-skill is listed twice.
+new version — step 8 of `/ship` is that fetch. The alternative is a symlink per
+skill in `~/.claude/skills/`, pointing at the main checkout rather than a
+worktree, live with no build step but dangling until the branch adding it lands.
+Never both, or the skill is listed twice.
 
-`AskUserQuestion` caps a question at four options and a call at four questions,
-so "one large multiselect over all twelve prefixes" is three grouped
-`multiSelect` questions in a single call. One call renders as one dialog; three
-calls would be three interruptions.
+`AskUserQuestion` caps a question at four options and a call at four, so "one
+large multiselect over all twelve prefixes" is three grouped `multiSelect`
+questions in one call — one dialog, not three interruptions.
 
 Landing that bump on `main` tags the release from CI. Never tag by hand: a cloud
 session cannot push `refs/tags/*` at all, so a tag step in the local workflow is
@@ -70,16 +60,11 @@ character before it, so a markdown table padded by character count comes out
 ragged. `build.sh` pads the generated glossary by display width; a table written
 by hand here needs the same arithmetic, or prettier's.
 
-`build.sh` mutates its parsed rows as it goes — the prefix cell loses its
-backticks and trailing space on the way to the README — so a check that needs
-the template's own spelling of a prefix has to read it before that strip, not
-after. The interactive skill's coverage check landed after it and matched
-nothing.
-
-The README shows a prefix as a bare emoji — 📚, never `📚 `. The code formatting
-and the trailing space belong to `template.md`, where a session reading it is
-about to set a title; `build.sh` strips them from the generated table, and prose
-in the README follows the same rule.
+The README shows a prefix as a bare emoji — 📚, never `📚 `. The backticks and
+the trailing space belong to `template.md`, where a session reading it is about
+to set a title. `build.sh` strips them as it parses, mutating its rows on the way
+to the README, so a check wanting the template's own spelling has to read it
+before that strip — the coverage check landed after it and matched nothing.
 
 ## The vocabulary is shared, not invented here
 
@@ -94,10 +79,9 @@ Adding a row costs a line in every project and nothing else, since an unused row
 is inert by design. Changing or removing one costs a sweep.
 
 Say a prefix is **set in the response that enters the stage** — never "by hand",
-which reads as something the user does when every setter is an agent. The
-distinction the wording has to carry is whether a skill owns the stage and
-re-reads it each run, or a response sets it inline from an instruction it has to
-remember.
+which reads as something the user does when every setter is an agent. What the
+wording must carry is whether a skill owns the stage and re-reads it each run, or
+a response sets it inline from an instruction it has to remember.
 
 Name a stage by what happens in it, never by a skill only this machine has. The
 `📚 ` row said "the response that invokes `learn`", and `learn` is a user-level
@@ -111,11 +95,14 @@ Do not reason about what an instruction "would" cause and call that a result.
 Run the skill against a real repo — a scratch `git init` for the blank-project
 path, a clone of a sibling repo for the revise-in-place path — and read what it
 wrote. A section that reads well here and lands badly there is the failure this
-repo exists to catch.
+repo exists to catch. A clone carries only the skills a repo commits: a
+gitignored `.claude/` clones away the half that matters most.
 
 Check both halves: the section in the instructions file, and the skills the
 install claims to have wired. A `🚀 ` row with no owner is the bug that keeps
-coming back.
+coming back; its mirror is a skill nobody wrote down, so grep every skill file
+for the prefix characters rather than trusting prose about which skill sets
+what — the prose goes stale and the skill is what runs.
 
 ## Testing your own output
 

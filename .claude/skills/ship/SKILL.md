@@ -13,7 +13,9 @@ Run the whole sequence unattended. Never stop and ask the user to merge, tag, or
    formatting nit. Fix it rather than hand-editing the README block.
 2. Bump the minor version in `plugins/emotive/.claude-plugin/plugin.json`.
 3. Commit all changes.
-4. `git fetch origin && git rebase origin/main` — resolve any conflicts.
+4. `git fetch origin && git rebase origin/main` — resolve any conflicts, then run
+   `./build.sh` again. A clean rebase still moves the files the build parses, so a
+   check this branch added can meet a format `main` changed under it.
 5. `git push` (add `--set-upstream origin <branch>` on the first push of a branch).
 6. Land it on `main`. The plugin marketplace serves `main`, so a release left on a
    branch has not shipped.
