@@ -123,30 +123,49 @@ across sessions. They are listed because the glossary ships whole, which is the
 rule this repo teaches; a repo that made an exception of itself would be arguing
 against its own product.
 
+**Handing back is itself a stage.** A response that closes on something for the
+user to do — a decision, a review, a look at the branch — is a park, and `🚙 `
+goes on before that response, since the idle dot cannot tell "waiting on you"
+from "given up on".
+
 **A design loop is not a park.** `🎨 ` holds through brainstorming and outranks
 `🚙 ` while it does: the back-and-forth _is_ the stage, so a park prefix on every
 turn of it marks the session as blocked without saying on what. It becomes `🚙 `
 once the design is settled and waiting on a decision, and `⏳ ` when that
-decision comes.
+decision comes. No skill here sets it; it goes on in the response that opens the
+loop.
 
 **Never mention a prefix in the response** — not what it was set to, not that it
 was already right, not that it was left alone. It is sidebar state; say nothing
 about it unless asked.
 
 These are **stages, not flags**: exactly one prefix at a time, and setting a new
-one replaces whatever was there. **Every title carries one**, and a prefix comes
-off only when another takes its place. The harness names a session, so every
-session starts without a prefix: putting the first one on that inherited title is
-part of the first response.
+one replaces whatever was there — only one reads cleanly at sidebar width, and
+`🚀 ` after `📦 ` is noise, since the later stage implies the earlier. **Every
+title carries one**, and a prefix comes off only when another takes its place: a
+bare title says nothing about the session, and the sidebar cannot tell it apart
+from a chat that never had a stage at all. A session with nothing left to do
+keeps the prefix of the last stage it reached. The harness names a session, so
+every session starts without a prefix: putting the first one on that inherited
+title is part of the first response, not something to wait for a stage change to
+prompt.
 
 Set a prefix **optimistically** — when the stage _starts_, not when it succeeds —
-and correct it if the stage falls over. `🚀 ` is set by `/ship`, which sets it
-before the build and puts it back if the push fails. `📚 ` goes on the moment a
-`learn` skill is invoked, before anything is read. The rest are set in the
-response that enters the stage (`mcp__ccd_session_mgmt__set_session_title`), and
-nothing reconciles a title against reality.
+and correct it if the stage falls over. A title that only becomes true at the end
+is blank for the whole stretch the sidebar is there to describe. `🚀 ` is set by
+`/ship` as its first step, before `./build.sh`, and `/ship` puts back what is
+true instead if the ship does not land — `📦 ` for a branch that built clean,
+`⏳ ` if the work goes back to implementing, `🚙 ` if it is waiting on the user —
+so it stays true on its own. `📚 ` goes on in the response that invokes `learn`,
+before anything is read: the `learn` here is the user-level skill, and it does
+not set a session title itself. The rest are set in the response that enters the
+stage (`mcp__ccd_session_mgmt__set_session_title`), and nothing reconciles a
+title against reality: an abandoned session keeps whatever prefix it had.
 
 **Ask which session this is before renaming one.** `get_session "self"` is the
 only answer, and it changes under a fork: a forked session carries the whole
 transcript, the id it read earlier in it, and a different id of its own, so a
-rename that reuses the remembered one retitles the session it forked _from_.
+rename that reuses the remembered one retitles the session it forked _from_. A
+fork also starts in the worktree of the session it forked from, and nothing stops
+a branch being checked out there, which moves that worktree under the other
+session's feet; put it back on the branch it was on once the work has landed.
