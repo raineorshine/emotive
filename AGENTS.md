@@ -63,15 +63,15 @@ A sweep is prose work, not a `sed`. The copies diverged in style — backticked
 prefixes or bare, aligned tables or compact — and they are not all in `AGENTS.md`:
 `karabiner` keeps the whole thing in `docs/workflow.md`, and `regard` splits the
 table from its edges across both. Grep for a prefix character to find them, not
-for a heading. Read every hit before replacing a phrase, too: "by hand" appears a
-dozen times across those repos meaning a person really does it — tagging a
-release, granting a permission, copying a bundle over — where the same words about
-a title mean an agent's own `set_session_title` call.
+for a heading, and read each hit in place: the wording that surrounds a prefix is
+ordinary prose elsewhere in those files, and a phrase swapped blind corrupts a
+paragraph that was never about session titles.
 
-Which is the wording rule itself: a prefix is **set in the response that enters
-the stage**, never "by hand". Every setter is an agent, and the distinction worth
-drawing is whether a skill owns the stage and re-reads it each run, or a response
-sets it inline from an instruction it has to remember.
+One wording rule holds across them: a prefix is **set in the response that enters
+the stage**. Every setter is an agent, so a phrase like "by hand" reads as
+something the user does; the distinction worth drawing is whether a skill owns the
+stage and re-reads it each run, or a response sets it inline from an instruction it
+has to remember.
 
 Commit subjects differ per repo, and a sweep is the one change that touches all of
 them: `docs:` in `axshot`, `blunt`, `github-triage` and `regard`; plain
