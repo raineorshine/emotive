@@ -4,9 +4,10 @@ Emotive: a session-title status convention for Claude Code, shipped as a plugin
 named `emotive`. The product is in two halves. The **glossary** —
 `context/session-titles.md` — is injected into every session by a `SessionStart`
 hook, so it needs no install and is identical everywhere. The **wiring** — the
-`emotive-setup` skill — installs only what a hook cannot know: what a row means
-in one particular repo, and the prefix changes its own skills have to set.
-Everything else is packaging.
+`emotive-setup` skill, with `emotive-setup-interactive` as a front door onto the
+same procedure — installs only what a hook cannot know: what a row means in one
+particular repo, and the prefix changes its own skills have to set. Everything
+else is packaging.
 
 The split is the whole design. A rule that reads the same in every repo goes in
 the injected half, where one edit reaches every session. A rule made of a repo's
@@ -19,6 +20,7 @@ own commands goes in the skill's half, where it is written into that repo once.
 | `plugins/emotive/context/session-titles.md` | the glossary — the actual product, injected into every session |
 | `plugins/emotive/hooks/hooks.json` | `SessionStart` hook that cats it into context |
 | `plugins/emotive/skills/emotive-setup/SKILL.md` | the wiring procedure — what the skill does when it runs |
+| `plugins/emotive/skills/emotive-setup-interactive/SKILL.md` | the same wiring, with the local half asked rather than inferred |
 | `plugins/emotive/skills/emotive-setup/template.md` | the shape of the local half: what lands in one repo's instructions |
 | `plugins/emotive/.claude-plugin/plugin.json` | version; gates `claude plugin update` |
 | `.claude-plugin/marketplace.json` | the marketplace listing that serves the plugin |
@@ -31,7 +33,12 @@ own commands goes in the skill's half, where it is written into that repo once.
    the rows, and every rule that is true regardless of repo. `SKILL.md` holds
    what an installing session does. `template.md` holds the shape of what lands
    in one repo's instructions. A rule in the wrong half either reaches nobody or
-   reaches everybody unresolved.
+   reaches everybody unresolved. `emotive-setup-interactive/SKILL.md` is a fourth
+   file and takes only what is different about asking — it defers to
+   `emotive-setup` for the procedure, so a rule belonging to the install itself
+   goes there and is inherited. Two copies of a step is the failure mode; the
+   interactive skill is a diff. What it may ask about is bounded: the local half,
+   never the glossary, which no skill installs and so no skill can subset.
 2. Run `./build.sh` — it re-pads the glossary in `context/session-titles.md` and
    copies it into the README between `glossary:begin` / `glossary:end` markers.
    Never hand-edit that block; it will be overwritten. The build fails on a
@@ -55,11 +62,19 @@ installed plugin, so a machine with the symlink and no plugin gets the skill and
 no injected glossary, which is the one combination that reads as the convention
 being broken. Install the plugin and drop the symlink; `claude --plugin-dir
 plugins/emotive` loads the working tree for one session when an edit needs
-trying before it ships.
+trying before it ships. A newly added skill is not live locally until the branch
+that adds it lands and the plugin updates, so try it with `--plugin-dir` rather
+than waiting for it to appear.
 
 Landing that bump on `main` tags the release from CI. Never tag by hand: a cloud
 session cannot push `refs/tags/*` at all, so a tag step in the local workflow is
 one more thing that silently only works from a laptop.
+
+`build.sh` builds the README's stripped rows as a separate list rather than
+mutating the ones it parsed, so a later check that needs the source's own
+spelling of a prefix reads the unmutated rows. An earlier coverage check read
+them after the strip and matched nothing; keep the two lists distinct rather
+than re-learning that.
 
 An emoji is two columns wide, and a variation selector is zero but widens the
 character before it, so a markdown table padded by character count comes out
@@ -72,6 +87,10 @@ and the trailing space belong to `context/session-titles.md`, where a session
 reading it is about to set a title; `build.sh` strips them from the README's copy
 of the table, which is why the two are padded separately, and prose in the README
 follows the same rule.
+
+`AskUserQuestion` caps a question at four options and a call at four questions,
+so a wide ask is grouped `multiSelect` questions in a single call. One call
+renders as one dialog; three calls would be three interruptions.
 
 ## The vocabulary is shared, not invented here
 
@@ -155,9 +174,8 @@ repeated here. These are the parts specific to this repo.
   across sessions. They still arrive in every session, which is the rule this
   repo teaches; a repo that made an exception of itself would be arguing against
   its own product.
-- `📚 ` is for extracting learnings into this file, the README or the skills. The
-  `learn` skill here is the user-level one and sets no session title, so the
-  response that invokes it puts `📚 ` on.
+- `📚 ` is for extracting learnings into this file, the README or the skills.
+  Nothing else sets it, so the response that starts that pass puts it on.
 
 A session in this repo is reading the glossary it is editing, and only if the
 plugin is installed on the machine — the symlink alone does not bring the hook.

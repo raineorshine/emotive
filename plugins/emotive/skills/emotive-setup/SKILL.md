@@ -14,6 +14,10 @@ the prefix changes wired into the skills that own them.
 `template.md`, beside this file, carries the shape of that local half. Read it before writing
 anything.
 
+Where this procedure would infer the local half from the repo, `emotive-setup-interactive` asks
+instead — same install, same wording, the answers supplied rather than guessed. Neither skill can
+change which rows exist: the hook delivers the glossary whole, so there is no membership to set.
+
 ## 0. Put `⏳ ` on this session first
 
 `mcp__ccd_session_mgmt__get_session` with `"self"` for the id and title, then `set_session_title`

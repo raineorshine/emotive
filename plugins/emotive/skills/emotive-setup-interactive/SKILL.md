@@ -2,106 +2,83 @@
 name: emotive-setup-interactive
 description: >
   Set up the session-title emoji status convention in the current project, asking
-  the user which prefixes to install instead of shipping the whole glossary. Use
-  when the user invokes /emotive-setup-interactive or says "let me pick the
-  prefixes", "ask me which emoji to install", "set up emoji status interactively".
+  the user about the parts of it that cannot be read off the repo, instead of
+  inferring them. Use when the user invokes /emotive-setup-interactive or says
+  "ask me about the emoji setup", "don't guess my shared resources", "set up
+  emoji status interactively".
 ---
 
 The install is `emotive-setup`'s, beside this one. Read `../emotive-setup/SKILL.md` and the
 `../emotive-setup/template.md` it points at, and run that procedure. This skill changes exactly one
-thing about it: **which rows land in the table is the user's answer, not a fixed glossary.**
+thing about it: **the parts that procedure infers from the repo become the user's answer.**
 
-Everything else is unchanged — where the section goes, what the rows are tailored with, which skills
-get wired, how it lands. Tailoring is read from the repo as it always was; the user is asked which
-stages this project has, not what its branch is called.
+Which rows exist is not one of those parts. The glossary arrives in every session from the plugin's
+`SessionStart` hook, whole and identical everywhere; there is nothing to install and so nothing to
+pick. What is genuinely uncertain is the local half — what this repo shares, what its gate is, which
+of its skills should set a prefix — and every one of those is something the non-interactive skill
+has to guess from file names and script contents. Guessing wrong writes a hazard paragraph about the
+wrong resource, which is worse than no paragraph at all.
 
 ## 0. `⏳ ` first, before the ask
 
 `emotive-setup`'s step 0, verbatim: `mcp__ccd_session_mgmt__get_session` with `"self"`, then
-`set_session_title` with `⏳ ` in front. Before the multiselect, not after — the prefix on this
-session is the convention this skill carries, not a preview of what the project chose. It does not
-change with the answer, and it is not mentioned in the response.
+`set_session_title` with `⏳ ` in front. Before the questions, not after — the prefix on this session
+is the convention this skill carries, not a preview of what the project chose. It does not change
+with the answer, and it is not mentioned in the response.
 
-## 1. Read what is already there
+## 1. Read the repo first, so the questions are about it
 
-Before asking, find the instructions file (`emotive-setup` step 1) and read two things:
+A question whose options could have been written without opening the repo is a wasted question. Do
+`emotive-setup` steps 1 through 3 as written — find the instructions file, and read the repo for the
+gate, the branch, the shared resources, the cloud limits. Then, additionally:
 
-- **A session-titles section, if the project already has one.** Then the ask is about changing
-  membership, and the questions say which rows are already installed.
-- **What the repo's own skills already set.** A prefix a skill sets is not droppable: the skill is
-  the thing that runs, and instructions that omit it are wrong about the repo.
+- **Grep every skill file for every prefix character** — all twelve, one grep — rather than reading
+  the instructions' prose about which skills set what. Those two disagree, which is half of why this
+  needs installing: a `test` skill that ends by setting `📦 ` is invisible to a section that only
+  mentions the lock and the ship.
+- **List the candidates for a shared resource** by what the repo actually contains: scripts that
+  write outside the worktree, a lock file, a fixed port, a `.env` outside git, an install target, a
+  deploy command. Each becomes an option; none becomes a paragraph until the user says so.
 
-  Find them by grepping every skill file for every prefix character — all twelve, one grep — not by
-  reading the instructions' prose about which skills set what. Those two disagree, which is half of
-  why this convention wants installing: a `test` skill that ends by setting `📦 ` is invisible to a
-  section that only mentions the lock and the ship. Do this **before** writing the questions, so
-  each undroppable prefix's description can lead with *always installed, `<skill>` sets it*. An
-  option offered as a checkbox and then overridden makes the dialog a lie, and the user finds out
-  in the report.
+What you find is the option list. What you cannot find is why you are asking.
 
 ## 2. Ask, in one call
 
-One `AskUserQuestion` call, three `multiSelect` questions, four prefixes each. The tool caps a
-question at four options, so "all twelve at once" is three groups in one dialog — not three dialogs,
-and not four questions with the fourth spent on something else. Twelve options in one call is the
-whole ask.
+One `AskUserQuestion` call, three `multiSelect` questions. The tool caps a question at four options,
+so each question offers at most four of what step 1 found — the candidates, not the glossary.
 
-| Question | Prefixes |
-| --- | --- |
-| Making something | `🎨 ` designing · `⏳ ` implementing · `📦 ` done on the branch · `🚀 ` shipping |
-| Sharing with other sessions | `🔍 ` auditing live state · `🔓 ` queued for the slot · `🔒 ` holding it · `💾 ` writing live |
-| Waiting, and after | `🚙 ` parked on the user · `⏲️ ` waiting on a schedule · `🪦 ` dead end · `📚 ` learnings |
+| Question | Asks | Writes |
+| --- | --- | --- |
+| What do sessions here race on? | the shared-resource candidates found in step 1, or "nothing is shared" | the `💾 ` / `🔍 ` / `🔒 ` hazard paragraph, or the line that says they are inert here |
+| What makes a branch done? | the test, lint and build commands found, or "no gate" | the `📦 ` line |
+| Which skills should set a prefix? | the skills found, each labelled with the prefix it would own and whether it already sets one | the wiring in step 4, and whether a `ship` skill gets written |
 
-Each option's label is the emoji and the stage; its description is what the project loses by leaving
-it out, in the project's own terms — the `💾 ` description names the repo's live resource, the `🚀 `
-description names its default branch. A description that could have been written without reading the
-repo is a wasted question.
+Each option's description says what the project gets by choosing it and what it loses by not — in
+the project's own terms, naming the script or the command. A skill that **already** sets a prefix
+leads its description with *already sets `<prefix>`*, because that one is not really a choice: the
+skill is the thing that runs, and an option offered and then overridden makes the dialog a lie.
 
-Say in the question text that leaving a prefix checked costs a line and nothing else, and that an
-unchecked one is left out of the table entirely. The default answer is all twelve; a prefix is
-dropped because the project will never reach the stage, not because it has not reached it yet.
+**"Nothing is shared" is a real answer, not a refusal.** It writes the one-line version — the hazard
+rows are inert here — which is exactly what `template.md` asks for in a repo with nothing to warn
+about. An empty answer to all three, though, is a refusal: nothing is installed, no file is touched,
+and the response says so in a line.
 
-All twelve are shown even where some cannot be dropped — the dialog is the glossary, and a project's
-stages read differently next to the ones it does not have. What a skill owns is said in the
-description, not withheld from the list.
+## 3. Install what was answered
 
-**An empty selection is a refusal.** Nothing is installed, no file is touched, and the response says
-so in a line. Do not write a section with an empty table.
+`emotive-setup` steps 4 through 6, with the answers in place of the inferences. Nothing about the
+glossary changes — it was never this skill's to change, and the section still never restates it.
 
-## 3. Install the subset
+- **A shared resource chosen** gets its paragraph written from `template.md`'s hazard table, naming
+  the script the user picked. This is the one thing in the whole install that another session acts
+  on, and the reason this skill exists.
+- **A skill chosen to own a prefix** gets wired as in step 4. `🚀 ` unchosen still means no `ship`
+  wiring and no minimal `ship` skill written — say so in the report, because it is the one answer
+  that leaves the repo with less than `emotive-setup` would have given it.
+- **A gate chosen** is named in the `📦 ` line verbatim, as a command someone can run.
 
-`emotive-setup` steps 2 through 5, with the dropped rows simply absent — from the table, and from
-the paragraphs under it, which have nothing left to attach to.
+## 4. Report
 
-- **`🚀 ` dropped** takes step 3's `ship` wiring and step 3a's minimal `ship` skill with it. A
-  project with no shipping row does not get a skill written to set one. Say so in the report; it is
-  the one drop that leaves the repo with less than it would otherwise have had.
-- **A hazard dropped** (`💾 `, `🔍 `, `🔒 `/`🔓 `) drops its paragraph too. That much is already how
-  `template.md` works — a paragraph with nothing to say is cut. Its mentions elsewhere are not.
-- **`📚 ` dropped** drops the sentence that says a `learn` skill does not set its own prefix.
-
-**Then grep the instructions file for each dropped prefix character and fix every hit.** The table
-row is the easy half. A prefix also turns up in the paragraph that calls two of them inert, in a
-precedence rule that ranks it against another, and in sections nowhere near the glossary — a
-cloud-session note listing the stages a container cannot reach, a skill's own procedure. A dropped
-prefix left standing in prose is worse than the row would have been: the row was inert, and the
-sentence is now wrong. Rewrite the survivors rather than deleting the sentence when it still has
-something to say about the prefixes that stayed.
-
-## 4. Mark it as chosen
-
-When fewer than twelve rows land, the installed section says so, in place of the "whole glossary
-ships" paragraph `template.md` carries. The wording is in that file, under **When the glossary is a
-chosen subset**.
-
-That line is what keeps the two skills from fighting: `emotive-setup` revises a section that says it
-is a subset as it stands, correcting rows rather than filling in the ones it left out. Membership is
-this skill's; wording is `emotive-setup`'s. A project that wants the rest of the glossary back runs
-this skill again and checks them.
-
-## 5. Report
-
-`emotive-setup`'s report, plus the two lines only this skill can give: which prefixes the project
-kept, and which it dropped. Name the dropped ones — a reader of the report should not have to
-subtract the table from the glossary to see what happened. An unchecked prefix that a skill forced
-back in is its own line, with the skill named: the user asked for it to go and it did not.
+`emotive-setup`'s report, plus the line only this skill can give: which answer produced which
+paragraph. A reader should be able to see that the hazard paragraph names `scripts/foo.sh` because
+the user picked it, not because a grep guessed. Name any option that was offered and then overridden
+by a skill that already sets that prefix, with the skill named.

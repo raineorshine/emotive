@@ -97,6 +97,19 @@ Running it again revises that section in place rather than appending a second
 copy; run against a repo still carrying the full pre-hook table, it cuts the
 table back to the local half.
 
+```
+/emotive-setup-interactive
+```
+
+The same install, with the local half asked instead of inferred: what sessions
+here race on, what makes a branch done, which skills should set a prefix — three
+grouped questions in one dialog, with the options built from what the repo
+actually contains. Worth it for the hazard paragraph above all, since a guess at
+the wrong shared resource is worse than no warning at all. It will not drop a
+prefix one of the project's own skills already sets, because the skill is what
+runs. Neither skill can change which rows exist — the hook delivers all twelve,
+so there is no membership to choose.
+
 ## License
 
 MIT
