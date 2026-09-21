@@ -130,11 +130,13 @@ abandoned attempt may have bumped already. `/ship` does it in that order.
 in one ship is a normal day when another session is active, and each is cheap; a
 force-push to `main` to avoid one never is.
 
+The rebase can replace `/ship` itself — a concurrent ship inverted the `🚀 ` rule here
+mid-procedure. Re-read the skill after it, not only the files the build parses.
+
 Where the other session has taken the product somewhere incompatible — a different design,
 not a textual conflict — that is not a merge to resolve. Say what each side did, put the
-choice to the user, and fold in what their answer keeps. `--ask` came out of exactly that:
-a concurrent session built a second skill to pick which rows to install, the hook made
-that meaningless, and it survived by being pointed at the local half instead.
+choice to the user, and fold in what their answer keeps; `--ask` survived that way, pointed
+at the local half after the hook made its original job meaningless.
 
 ## Evaluating a change
 
@@ -157,18 +159,11 @@ flag is no control — verify an edit by making its wording distinctive and chec
 that wording arrives. Read what the session actually did with its title, not what
 the file says it should have — the published hooks reference is wrong about whether
 `SessionStart` can inject at all, so neither it nor the file settles the question.
-[docs/hook-injection.md](docs/hook-injection.md) has the mechanism, the
-`additionalContext` trap that fails silently, and the alternatives already
-rejected.
+[docs/hook-injection.md](docs/hook-injection.md) has the mechanism, the silent
+`additionalContext` trap, and the alternatives already rejected.
 
-`--ask` cannot be tested unattended: a headless run has nobody to answer the
-dialog, so `-p` exercises the inferring path only. Test the ask by hand, and read
-whether its options came from the repo's own files.
-
-## Testing your own output
-
-This convention governs the session that runs it too: a session working here
-carries a prefix like any other, and never mentions it.
+`--ask` cannot be tested unattended: a headless run has nobody to answer the dialog, so
+`-p` exercises the inferring path only. Test it by hand, and read where its options came from.
 
 ## Reporting
 
@@ -182,8 +177,8 @@ happens on a branch in a worktree and lands on `main`; `/ship` is that procedure
 
 ## Session titles
 
-The glossary arrives from this plugin's own `SessionStart` hook, so it is not
-repeated here. These are the parts specific to this repo.
+The glossary arrives from this plugin's own `SessionStart` hook, so it is not repeated
+here — and it governs a session working on it like any other. These are this repo's parts.
 
 - `📦 ` means `./build.sh` ran clean and the version is bumped, and it holds right
   through a `/ship` until the push lands.
