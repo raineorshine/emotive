@@ -120,6 +120,26 @@ Name a stage by what happens in it, never by a skill only this machine has. The
 skill nobody else has — so the injected copy names the pass instead, and reads the
 same in any project.
 
+## Shipping while another session is shipping
+
+Nothing locks `main`, and two sessions in two worktrees can reach `/ship` at once. The
+failure is not the conflict, which git refuses safely; it is the **version number**. A
+bump chosen before the rebase is a bump off a stale `main`, and if the other session
+lands first, its tag already holds the number — so the bump has to be derived from what
+the rebase actually brought in. `/ship` does it in that order for this reason.
+
+`main` also moves during a resolve, not only before one, so the check belongs immediately
+before the push rather than at the start of the ship. Four rebases in one ship is a normal
+day when another session is active, and each one is cheap; a force-push to `main` to avoid
+one is never the answer.
+
+Where the other session has taken the product somewhere incompatible — not a textual
+conflict but a different design — that is not a merge to resolve. Say what each side did
+and put the choice to the user, then fold in whatever their answer keeps. The interactive
+skill's second life came out of exactly that: it was built to ask which rows to install,
+which the hook made meaningless, and it survived by being pointed at the local half
+instead.
+
 ## Evaluating a change
 
 Do not reason about what an instruction "would" cause and call that a result.

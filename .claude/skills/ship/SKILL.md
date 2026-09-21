@@ -11,14 +11,21 @@ Run the whole sequence unattended. Never stop and ask the user to merge, tag, or
    it — before the build, not after it lands (see Session titles in AGENTS.md). Say nothing about it.
 1. `./build.sh` — it fails on a placeholder with no generic wording, which is a real failure, not a
    formatting nit. Fix it rather than hand-editing the README block.
-2. Bump the minor version in `plugins/emotive/.claude-plugin/plugin.json`.
-3. Commit all changes.
-4. `git fetch origin && git rebase origin/main` — resolve any conflicts, then run
+2. Commit all changes.
+3. `git fetch origin && git rebase origin/main` — resolve any conflicts, then run
    `./build.sh` again. A clean rebase still moves the files the build parses, so a
    check this branch added can meet a format `main` changed under it.
+4. Bump the minor version in `plugins/emotive/.claude-plugin/plugin.json`, **after**
+   the rebase and off the version the rebase brought in, then commit the bump. Bumping
+   before means bumping off a stale `main`: another session shipping meanwhile takes the
+   number, and its tag is already pushed, so the release has nowhere to land. Derive it,
+   never remember it.
 5. `git push` (add `--set-upstream origin <branch>` on the first push of a branch).
 6. Land it on `main`. The plugin marketplace serves `main`, so a release left on a
-   branch has not shipped.
+   branch has not shipped. Re-check `git log HEAD..origin/main` immediately before the
+   push: the window between resolving a rebase and pushing is exactly when another
+   session lands something, and a rejected `HEAD:main` push means going back to step 3
+   rather than forcing it. Never force-push `main`.
    - Locally: `git push origin HEAD:main`.
    - From a cloud session that is refused: open a PR for the branch and merge it
      with the GitHub tools. Rebase-merge, to keep `main` linear.
