@@ -1,7 +1,7 @@
 {
   "name": "emotive",
   "description": "Injects the emotive session-title status convention at session start, and wires its prefixes into a project's own skills.",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "license": "MIT",
   "author": {
     "name": "Raine Revere",
