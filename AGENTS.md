@@ -19,7 +19,7 @@ and the prefix changes its own skills have to set. Everything else is packaging.
 | `plugins/emotive/skills/emotive-setup/template.md` | the shape of the local half: what lands in one repo's instructions |
 | `plugins/emotive/.claude-plugin/plugin.json` | version; gates `claude plugin update` |
 | `.claude-plugin/marketplace.json` | the marketplace listing that serves the plugin |
-| `.claude/skills/ship/SKILL.md` | the ship procedure — build, rebase, version, land, tag, learn |
+| `.claude/skills/ship/SKILL.md` | the ship procedure — build, rebase, version, land, tag, learn, archive |
 | `.claude/skills/update/SKILL.md` | `/update <prompt>` — routes a change to the right half |
 | `build.sh` | normalizes the glossary table and copies it into the README |
 | `.github/workflows/tag-release.yml` | tags `v<version>` when a bump lands on `main` |
