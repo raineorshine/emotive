@@ -7,7 +7,7 @@ argument-hint: "[--ask]"
 # Emotive setup
 
 **The glossary is not installed by this skill.** The plugin's `SessionStart` hook prints
-`context/session-titles.md` into every session, so the twelve rows and every rule that reads the
+`context/session-titles.md` into every session, so the thirteen rows and every rule that reads the
 same in every repo are already in front of you — reread them there rather than restating them.
 What this skill installs is the half a hook cannot know: what those rows mean *in this repo*, and
 the prefix changes wired into the skills that own them.
@@ -88,7 +88,7 @@ Answer them from the repo, and write down only the ones that have an answer:
 
 Every one of those is found by reading what the repo contains — its scripts, its skill files, its
 `package.json`, its CI config — never by looking for prefix characters in it. **A project adopting
-this convention has no emoji in it yet**, so a grep for the twelve prefixes is empty by definition
+this convention has no emoji in it yet**, so a grep for the thirteen prefixes is empty by definition
 on a first install and cannot be what the answers come from. That grep has exactly one job, in step
 4: on a repo that has already adopted the convention, it finds which skills are already setting
 something. Expect nothing from it otherwise, and never let an empty result read as "this repo shares
@@ -154,7 +154,7 @@ records that instead.
 
 Where a repo's skill already sets a prefix, keep the emoji it uses and reconcile the other way —
 match the section to the skill, because the skill is the thing that runs. Find those by grepping
-every skill file for the twelve prefix characters, rather than trusting the instructions' prose
+every skill file for the thirteen prefix characters, rather than trusting the instructions' prose
 about which skill sets what: the prose goes stale and the skill runs. On a first install this finds
 nothing, which is the expected result and not a finding — it is only a re-run or a sweep that has
 anything to reconcile.
@@ -207,7 +207,7 @@ here is the place to make it. Everything else in that repo still gets swept and 
 
 ### The pre-hook sweep
 
-A repo carrying the **old, pre-hook full copy** — the whole twelve-row table and the generic prose —
+A repo carrying the **old, pre-hook full copy** — the whole twelve- or thirteen-row table and the generic prose —
 is the common case now, and the fix is subtraction: cut every row and every paragraph the injected
 copy already states, and keep only what answers step 3. If nothing is left, cut the section. Say in
 the report which repo lost its table, so the change reads as the sweep it is rather than as a

@@ -9,8 +9,8 @@ Run the whole sequence unattended. Never stop and ask the user to merge, tag, or
 
 0. Leave the title's prefix alone for now. `🚀 ` means shipped, and nothing is shipped until step 6
    lands — a title that says so earlier is wrong for the whole ship, and stays wrong if the ship
-   falls over. A shipping session keeps whatever is true meanwhile, usually `📦 ` (see Session titles
-   in AGENTS.md).
+   falls over. A shipping session keeps whatever is true meanwhile, usually `📦 `, or `✈️ ` when
+   `ship-at-end` started it (see Session titles in AGENTS.md).
 1. `./build.sh` — it fails on a placeholder with no generic wording, which is a real failure, not a
    formatting nit. Fix it rather than hand-editing the README block.
 2. Commit all changes.
@@ -84,8 +84,8 @@ If step 7 finds no tag, say which version is untagged; do not report a clean shi
 
 The `🚀 ` set in step 6 stays through the report and after it, until the session starts something
 else — never cleared to leave a bare title. If the ship never got that far, no `🚀 ` went on and
-there is nothing to undo; check the title still says what is true now (`📦 ` for a gated branch,
-`⏳ ` if the work goes back to implementing, `🚙 ` if it waits on the user) and correct it if not.
+there is nothing to undo; check the title still says what is true now (`📦 ` for a gated
+branch, but `🚙 ` under `✈️ `, which never rests at `📦 `; `⏳ ` if the work goes back to implementing, `🚙 ` if it waits on the user) and correct it if not.
 Say nothing about it either way.
 
 A change to what a prefix *means* is not finished by this ship: an unswept sibling repo still

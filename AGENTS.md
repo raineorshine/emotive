@@ -20,6 +20,7 @@ and the prefix changes its own skills have to set. Everything else is packaging.
 | `plugins/emotive/.claude-plugin/plugin.json` | version; gates `claude plugin update` |
 | `.claude-plugin/marketplace.json` | the marketplace listing that serves the plugin |
 | `.claude/skills/ship/SKILL.md` | the ship procedure — build, rebase, version, land, tag, learn, archive |
+| `.claude/skills/ship-at-end/SKILL.md` | `/ship-at-end` — implement, then `/ship`, on autopilot (`✈️ `) |
 | `.claude/skills/update/SKILL.md` | `/update <prompt>` — routes a change to the right half |
 | `build.sh` | normalizes the glossary table and copies it into the README |
 | `.github/workflows/tag-release.yml` | tags `v<version>` when a bump lands on `main` |
@@ -139,6 +140,8 @@ here — and it governs a session working on it like any other. These are this r
 - `🚀 ` means the push to `main` landed — the marketplace serves `main`, so nothing
   before that is shipped. `/ship` sets it as its last step; `📦 ` holds until then.
 - `🚙 ` is a decision about the convention, or a review of a branch.
+- `✈️ ` is what `/ship-at-end` sets when it starts implementing, and it holds through `/ship`
+  until `🚀 `. It never rests at `📦 `; a run that needs the user goes to `🚙 `.
 - `💾 `, `🔍 `, `🔒 ` and `🔓 ` are inert here — nothing in this repo is shared
   across sessions. They arrive anyway; a repo making an exception of itself would
   be arguing against its own product.

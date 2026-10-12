@@ -30,7 +30,7 @@ Grep for a row instead of a heading, and allow the prefix cell either spelling �
 some repos write `` | `🚀 ` | `` and some write `| 🚀 |`:
 
 ```bash
-grep -rn '^| `\?[🎨⏳🔍🔓🔒💾📦🚀🚙⏲🪦📚]' --include='*.md' .
+grep -rn '^| `\?[🎨⏳🔍🔓🔒💾📦🚀🚙✈⏲🪦📚]' --include='*.md' .
 ```
 
 ## Read the target's git state before touching it
