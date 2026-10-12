@@ -7,21 +7,21 @@ for worktree sessions; neither can be set from here — `set_session_title` take
 nothing else. So a **single leading emoji on the title** is the only lever, and it is spent on what
 the app cannot know: where the work stands.
 
-| Prefix | Means                                                                                       |
-| ------ | ------------------------------------------------------------------------------------------- |
-| `🎨 `  | brainstorming or designing with the user — exploring, sketching, deciding what to build     |
-| `⏳ `  | implementing — the weakest of them; every other prefix takes precedence                     |
-| `✈️ `  | autopilot: the user stepped away; the session finishes the work alone, then archives itself |
-| `🔍 `  | auditing against live state — a dry run, or the plan it printed, with an apply to follow    |
-| `🔓 `  | about to take that slot — queued or blocked on it — or just released it                     |
-| `🔒 `  | holding the single slot only one session can use at a time                                  |
-| `💾 `  | writing to a live resource every session shares right now                                   |
-| `📦 `  | gated and shippable without re-running anything — and it holds through a ship               |
-| `🚀 `  | shipped — the push landed; never set while shipping                                         |
-| `🚙 `  | parked: the work is sound and waiting on the user (a decision, a credential, a click)       |
-| `⏲️ `  | waiting on a task scheduled for later — nothing to do until it fires                        |
-| `🪦 `  | dead end — kept for the findings, not to resume                                             |
-| `📚 `  | extracting learnings into the instruction files                                             |
+| Prefix | Means                                                                                     |
+| ------ | ----------------------------------------------------------------------------------------- |
+| `🎨 `  | brainstorming or designing with the user — exploring, sketching, deciding what to build   |
+| `⏳ `  | implementing — the weakest of them; every other prefix takes precedence                   |
+| `✈️ `  | autopilot: implementing, with a ship and an archive to follow unless something goes wrong |
+| `🔍 `  | auditing against live state — a dry run, or the plan it printed, with an apply to follow  |
+| `🔓 `  | about to take that slot — queued or blocked on it — or just released it                   |
+| `🔒 `  | holding the single slot only one session can use at a time                                |
+| `💾 `  | writing to a live resource every session shares right now                                 |
+| `📦 `  | gated and shippable without re-running anything — and it holds through a ship             |
+| `🚀 `  | shipped — the push landed; never set while shipping                                       |
+| `🚙 `  | parked: the work is sound and waiting on the user (a decision, a credential, a click)     |
+| `⏲️ `  | waiting on a task scheduled for later — nothing to do until it fires                      |
+| `🪦 `  | dead end — kept for the findings, not to resume                                           |
+| `📚 `  | extracting learnings into the instruction files                                           |
 
 The whole glossary applies in every project, including rows for stages a project has no way to
 reach. An unused row is inert — it costs nothing and settles the vocabulary before the workflow that
@@ -54,18 +54,18 @@ response that finishes what it was doing moves the prefix on before it ends — 
 gated and shippable, `🚙 ` when it closes on something for the user, `🪦 ` when it is abandoned.
 `⏳ ` is never what a session rests at: it names work in flight, and between turns there is none.
 
-**`✈️ ` is work in flight that rests between turns.** It goes on when the user hands the work over
-and leaves — "take it from here", a request to finish unattended — and it replaces `⏳ ` for as long
-as nobody is watching: the sidebar's question is not where the work stands but whether anyone is
-needed, and `✈️ ` answers no. It holds across the turns an autopilot spends waiting on CI or a
-review, which is the one place a session rests at a prefix naming work in flight. It ends the way the
-work does: at `🚀 ` or `📦 ` when it finishes, and then the session archives itself if nothing went
-wrong; at `🚙 ` the moment it needs the user after all, since an autopilot that is stuck is a park
-the user does not know about.
+**`✈️ ` is `⏳ ` that will not hand back.** Both name implementing; they differ in where the work
+expects to end. `⏳ ` finishes its work and hands the turn to the user. `✈️ ` carries it through to
+shipped and then archives the session, with no turn for the user in between — so it goes on in the
+first response of a request to implement and ship, and the user reading the sidebar knows nothing
+there is waiting on them. It holds through the ship and the turns spent waiting on CI or a review,
+the one place a prefix naming work in flight rests between turns. **`✈️ ` never lands on `📦 `:** an
+autopilot that went smoothly ends at `🚀 `, and one that did not is no longer an autopilot — it
+ends at `🚙 ` the moment it needs the user, or `🪦 ` when it is abandoned.
 
 **`🚀 ` is the exception, because it names a result and not a stage.** It goes on when the push
 lands and never before, so a ship that is rebasing, re-testing or retrying a rejected push still
-shows the prefix that was true before it — usually `📦 `, which holds right through the ship — and a
+shows the prefix that was true before it — usually `📦 `, or `✈️ ` on autopilot, which holds right through the ship — and a
 ship that falls over needs no correcting. That is what buys the exception: every other prefix needs
 a restore path when its stage fails, and this one cannot fail after the fact. A `ship` skill sets it
 as its last step, not its first. `📚 ` goes on in the response that
