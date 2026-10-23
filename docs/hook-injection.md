@@ -48,9 +48,10 @@ logs as a success, and reaches nobody.
 
 ## What the mechanism cannot do
 
-**The hook has no effect where `set_session_title` does not exist.** That tool is
-the desktop app's (`mcp__ccd_session_mgmt__*`); a terminal session has no sidebar
-and no such tool, so the injected rules are inert there. The injected copy says so
+**The hook has no effect where `set_session_title` does not exist.** The desktop
+app has it (`mcp__ccd_session_mgmt__*`), and so does a cloud session
+(`mcp__claude-code-remote__*`, keyed by the `ccr.id` its `get_session` returns);
+a terminal session has no sidebar and no such tool, so the injected rules are inert there. The injected copy says so
 in its last line rather than leaving a session hunting for a tool it does not have.
 
 **An injected rule is weaker than one in a skill.** `blunt`'s own `AGENTS.md`

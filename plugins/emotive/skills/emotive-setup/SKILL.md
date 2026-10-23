@@ -25,7 +25,10 @@ $ARGUMENTS
 ## 0. Put `⏳ ` on this session first
 
 `mcp__ccd_session_mgmt__get_session` with `"self"` for the id and title, then `set_session_title`
-with `⏳ ` in front of the existing title, replacing any prefix already there. Do it before reading
+with `⏳ ` in front of the existing title, replacing any prefix already there. In a cloud session,
+where those tools do not exist, `mcp__claude-code-remote__get_session` with no `session_id` gives
+`ccr.id` and `ccr.title`, and `mcp__claude-code-remote__set_session_title` takes that id. Skip it only
+when neither exists. Do it before reading
 the repo, not after the files land — a convention whose own installer does not follow it will not
 survive its first week. Say nothing about it in the response, then or ever.
 

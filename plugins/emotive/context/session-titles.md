@@ -71,7 +71,7 @@ a restore path when its stage fails, and this one cannot fail after the fact. A 
 as its last step, not its first. `📚 ` goes on in the response that
 starts a pass of extracting learnings into the instruction files, before anything is read — nothing
 else sets it. The rest are
-set in the response that enters the stage (`mcp__ccd_session_mgmt__set_session_title`), and nothing
+set in the response that enters the stage (`set_session_title`, as below), and nothing
 reconciles a title against reality: an abandoned session keeps whatever prefix it had.
 
 **Handing back is itself a stage.** A response that closes on something for the user to do — a
@@ -89,12 +89,18 @@ back while a write is still in flight keeps the hazard prefix. A hazard outranks
 can act and a clock cannot. `⏳ ` loses to everything.
 
 **Ask which session this is before renaming one.** `mcp__ccd_session_mgmt__get_session` with
-`"self"` is the only answer, and it changes under a fork: a forked session carries the whole
+`"self"` is the answer in the desktop app, and `mcp__claude-code-remote__get_session` with no
+`session_id` (its `ccr.id`) in a cloud session. Either is the only answer, and it changes under a
+fork: a forked session carries the whole
 transcript, the id it read earlier in that transcript, and a different id of its own, so a rename
 that reuses the remembered one retitles the session it forked _from_. A fork also starts in the
 worktree of the session it forked from, and nothing stops a branch being checked out there, which
 moves that worktree under the other session's feet; put it back on the branch it was on once the
 work has landed.
 
-Where `set_session_title` is not among the available tools there is no title to set, and none of
-this applies — it is the desktop app's, and a terminal session has no sidebar to answer to.
+Set the title with `mcp__ccd_session_mgmt__set_session_title` where it exists. A cloud session has
+no `mcp__ccd_session_mgmt__*` tools but does have a title: read `ccr.id` and `ccr.title` from
+`mcp__claude-code-remote__get_session` with no `session_id`, then call
+`mcp__claude-code-remote__set_session_title` with that id, replacing the existing prefix rather than
+stacking. Only where neither tool exists is there no title to set, and none of this applies — a
+terminal session has no sidebar to answer to.

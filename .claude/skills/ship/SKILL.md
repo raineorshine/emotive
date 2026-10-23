@@ -54,8 +54,11 @@ Run the whole sequence unattended. Never stop and ask the user to merge, tag, or
    It finds `main` wherever it is checked out, and moves the ref alone when `main` is checked out nowhere. Untracked files don't block it. When it reports local changes, or the fast-forward refuses because local `main` has commits of its own, leave it and say in one line that the local `main` was left behind. Never reset, stash, commit or `checkout --` in that checkout: the changes may be another session's work.
 
    **Once the push succeeds, and not before,** read the title
-   (`mcp__ccd_session_mgmt__get_session` with `"self"`) and set it back with a `🚀 ` prefix,
-   replacing the existing one rather than stacking. Say nothing about it.
+   (`mcp__ccd_session_mgmt__get_session` with `"self"`) and set it back with a `🚀 ` prefix
+   (`mcp__ccd_session_mgmt__set_session_title`), replacing the existing one rather than stacking.
+   In a cloud session, where those tools do not exist, `mcp__claude-code-remote__get_session` with
+   no `session_id` gives `ccr.id` and `ccr.title`, and `mcp__claude-code-remote__set_session_title`
+   takes that id. Skip it only when neither exists. Say nothing about it.
 7. Confirm the tag. `.github/workflows/tag-release.yml` tags `v<version>` when the
    version bump lands on `main`; never tag by hand.
    `git fetch origin --tags --force && git tag -l v<version>` — retry for up to a
@@ -98,7 +101,7 @@ Report the commit subject, the new version, and whether the plugin updated. Skip
 ## Archive the session
 
 Last of all, after the report and `🚀 Shipped` are written, archive this session: `mcp__ccd_session_mgmt__archive_session` with `"self"`
-and a reason naming the ship. It is the final tool call of the ship, made in the same response as the report — nothing after the
+and a reason naming the ship, or in a cloud session `mcp__claude-code-remote__archive_session` with this session's `ccr.id`. It is the final tool call of the ship, made in the same response as the report — nothing after the
 archive reaches the user. Asking to ship is the agreement to archive; do not ask again.
 
 Skip it when `learn` or `learn-organize` invoked this ship: the session goes on after that ship. A
