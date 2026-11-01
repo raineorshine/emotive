@@ -38,3 +38,17 @@ remember.
 A prefix a project cannot reach is inert by design, not a candidate for removal.
 Adding a row costs nothing anywhere for the same reason, and an unused row settles
 the vocabulary before the workflow that needs it arrives.
+
+## An exception amends every absolute it breaks
+
+The glossary states its rules as absolutes — "never what a session rests at", "the
+one place", "loses to everything" — and each is repeated where a neighbouring
+prefix leans on it. Letting `⏳ ` rest while a background run of Claude works took
+three edits: the rule itself, the `✈️ ` paragraph that called itself the only
+exception, and the precedence paragraph. Grep the file for the prefix and for
+`Precedence` before adding an exception, and amend every absolute it contradicts in
+the same change, or the injected copy argues with itself.
+
+The boundary of that exception — a run of Claude versus a server left up for the
+user — is also encoded in supernova, which keeps a chat's card working under a stale
+`🚙 ` on the same test. A change to where that line falls has to be made in both.
