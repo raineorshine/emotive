@@ -54,12 +54,20 @@ response that finishes what it was doing moves the prefix on before it ends — 
 gated and shippable, `🚙 ` when it closes on something for the user, `🪦 ` when it is abandoned.
 `⏳ ` is never what a session rests at: it names work in flight, and between turns there is none.
 
+**A background run of Claude itself is work in flight.** A turn that hands work to a `claude -p`
+session — as a Chrome task is handed to one — or to a background subagent ends with that run still
+going, and its landing starts the next turn with no one's input. So `⏳ ` may rest between turns
+while it works, and goes on in the turn that starts the run, replacing a `🚙 ` an earlier turn left:
+that park ended when the user answered it, and leaving it up says "waiting on you" while Claude is
+the one working. Only a run of Claude qualifies. A dev server or a watcher left up for the user to
+try is waiting on the user, not working for them, and the session still rests at `🚙 `.
+
 **`✈️ ` is `⏳ ` that will not hand back.** Both name implementing; they differ in where the work
 expects to end. `⏳ ` finishes its work and hands the turn to the user. `✈️ ` carries it through to
 shipped and then archives the session, with no turn for the user in between — so it goes on in the
 first response of a request to implement and ship, and the user reading the sidebar knows nothing
 there is waiting on them. It holds through the ship and the turns spent waiting on CI or a review,
-the one place a prefix naming work in flight rests between turns. **`✈️ ` never lands on `📦 `:** an
+as a background run of Claude holds `⏳ `. **`✈️ ` never lands on `📦 `:** an
 autopilot that went smoothly ends at `🚀 `, and one that did not is no longer an autopilot — it
 ends at `🚙 ` the moment it needs the user, or `🪦 ` when it is abandoned.
 
@@ -86,7 +94,8 @@ waiting on a decision to build it, and `⏳ ` when that decision comes.
 Precedence, when two could apply: a hazard (`💾 `, `🔍 `, `🔒 `) outranks a park, because the warning
 to other sessions comes before the one to the user, who is already reading the response — handing
 back while a write is still in flight keeps the hazard prefix. A hazard outranks `✈️ ` for the same reason. `🚙 ` outranks `⏲️ `, because a person
-can act and a clock cannot. `⏳ ` loses to everything.
+can act and a clock cannot. `⏳ ` loses to everything — but a `🚙 ` an earlier turn left is not a
+rival claim, so a background run of Claude still replaces it.
 
 **Ask which session this is before renaming one.** `mcp__ccd_session_mgmt__get_session` with
 `"self"` is the answer in the desktop app, and `mcp__claude-code-remote__get_session` with no
