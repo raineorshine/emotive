@@ -7,7 +7,7 @@ argument-hint: "[--ask]"
 # Emotive setup
 
 **The glossary is not installed by this skill.** The plugin's `SessionStart` hook prints
-`context/session-titles.md` into every session, so the thirteen rows and every rule that reads the
+`context/session-titles.md` into every session, so the fourteen rows and every rule that reads the
 same in every repo are already in front of you — reread them there rather than restating them.
 What this skill installs is the half a hook cannot know: what those rows mean *in this repo*, and
 the prefix changes wired into the skills that own them.

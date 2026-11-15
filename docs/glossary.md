@@ -52,3 +52,7 @@ the same change, or the injected copy argues with itself.
 The boundary of that exception — a run of Claude versus a server left up for the
 user — is also encoded in supernova, which keeps a chat's card working under a stale
 `🚙 ` on the same test. A change to where that line falls has to be made in both.
+
+Supernova also draws `🧹 ` itself — as the tasklist octicon on a card's working chip, in
+`STAGE_ICONS` (`components/stageIcons.tsx`) — so changing that prefix's character is an edit there
+too.

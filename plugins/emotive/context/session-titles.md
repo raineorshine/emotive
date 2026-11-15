@@ -7,21 +7,22 @@ for worktree sessions; neither can be set from here — `set_session_title` take
 nothing else. So a **single leading emoji on the title** is the only lever, and it is spent on what
 the app cannot know: where the work stands.
 
-| Prefix | Means                                                                                     |
-| ------ | ----------------------------------------------------------------------------------------- |
-| `🎨 `  | brainstorming or designing with the user — exploring, sketching, deciding what to build   |
-| `⏳ `  | implementing — the weakest of them; every other prefix takes precedence                   |
-| `✈️ `  | autopilot: implementing, with a ship and an archive to follow unless something goes wrong |
-| `🔍 `  | auditing against live state — a dry run, or the plan it printed, with an apply to follow  |
-| `🔓 `  | about to take that slot — queued or blocked on it — or just released it                   |
-| `🔒 `  | holding the single slot only one session can use at a time                                |
-| `💾 `  | writing to a live resource every session shares right now                                 |
-| `📦 `  | gated and shippable without re-running anything — and it holds through a ship             |
-| `🚀 `  | shipped — the push landed; never set while shipping                                       |
-| `🚙 `  | parked: the work is sound and waiting on the user (a decision, a credential, a click)     |
-| `⏲️ `  | waiting on a task scheduled for later — nothing to do until it fires                      |
-| `🪦 `  | dead end — kept for the findings, not to resume                                           |
-| `📚 `  | extracting learnings into the instruction files                                           |
+| Prefix | Means                                                                                       |
+| ------ | ------------------------------------------------------------------------------------------- |
+| `🎨 `  | brainstorming or designing with the user — exploring, sketching, deciding what to build     |
+| `⏳ `  | implementing — the weakest of them; every other prefix takes precedence                     |
+| `✈️ `  | autopilot: implementing, with a ship and an archive to follow unless something goes wrong   |
+| `🔍 `  | auditing against live state — a dry run, or the plan it printed, with an apply to follow    |
+| `🔓 `  | about to take that slot — queued or blocked on it — or just released it                     |
+| `🔒 `  | holding the single slot only one session can use at a time                                  |
+| `💾 `  | writing to a live resource every session shares right now                                   |
+| `📦 `  | gated and shippable without re-running anything — and it holds through a ship               |
+| `🚀 `  | shipped — the push landed; never set while shipping                                         |
+| `🚙 `  | parked: the work is sound and waiting on the user (a decision, a credential, a click)       |
+| `⏲️ `  | waiting on a task scheduled for later — nothing to do until it fires                        |
+| `🧹 `  | organizing the sessions themselves — finding, clearing, stacking or snoozing — not the repo |
+| `🪦 `  | dead end — kept for the findings, not to resume                                             |
+| `📚 `  | extracting learnings into the instruction files                                             |
 
 The whole glossary applies in every project, including rows for stages a project has no way to
 reach. An unused row is inert — it costs nothing and settles the vocabulary before the workflow that
@@ -51,7 +52,8 @@ sidebar is there to describe.
 **A prefix has to still be true once the response ends.** Optimistic setting covers the stretch while
 the response is being written; the sidebar is read *between* turns, when nothing is running. So a
 response that finishes what it was doing moves the prefix on before it ends — `📦 ` when the work is
-gated and shippable, `🚙 ` when it closes on something for the user, `🪦 ` when it is abandoned.
+gated and shippable, `🚙 ` when it closes on something for the user, `🪦 ` when it is abandoned,
+`🧹 ` when all it did was organize sessions.
 `⏳ ` is never what a session rests at: it names work in flight, and between turns there is none.
 
 **A background run of Claude itself is work in flight.** A turn that hands work to a `claude -p`
@@ -82,6 +84,15 @@ else sets it. The rest are
 set in the response that enters the stage (`set_session_title`, as below), and nothing
 reconciles a title against reality: an abandoned session keeps whatever prefix it had.
 
+**`🧹 ` is housekeeping, not work.** It marks a session spent entirely on the sessions themselves —
+identifying one, finding one, archiving or clearing them, stacking or snoozing them — which may be
+started in a project only so it has the context to tell which sessions are which. It goes on in the
+first response of such a request and rests between turns, since it says what the session was rather
+than naming work in flight, and an organizing session ends there: it has nothing to ship. It is true
+only while nothing has been done to the repo, so it never competes with a prefix that names repo
+work — the first edit, run or ship moves the session to that stage, and a session working on the
+repo that tidies a few sessions along the way keeps its own prefix, `✈️ ` included.
+
 **Handing back is itself a stage.** A response that closes on something for the user to do — a
 decision, a credential, a click — is a park, and `🚙 ` goes on before that response, since the idle
 dot cannot tell "waiting on you" from "given up on".
@@ -94,7 +105,9 @@ waiting on a decision to build it, and `⏳ ` when that decision comes.
 Precedence, when two could apply: a hazard (`💾 `, `🔍 `, `🔒 `) outranks a park, because the warning
 to other sessions comes before the one to the user, who is already reading the response — handing
 back while a write is still in flight keeps the hazard prefix. A hazard outranks `✈️ ` for the same reason. `🚙 ` outranks `⏲️ `, because a person
-can act and a clock cannot. `⏳ ` loses to everything — but a `🚙 ` an earlier turn left is not a
+can act and a clock cannot. `🚙 ` outranks `🧹 ` for the same reason: an organizing session that
+closes on a question — which of these to clear — is waiting on the user, and a hazard outranks it as
+it outranks a park. `⏳ ` loses to everything — but a `🚙 ` an earlier turn left is not a
 rival claim, so a background run of Claude still replaces it.
 
 **Ask which session this is before renaming one.** `mcp__ccd_session_mgmt__get_session` with
