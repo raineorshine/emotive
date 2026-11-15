@@ -17,6 +17,10 @@ about to set a title. `build.sh` keeps two row lists for that, parsed and stripp
 padded separately — a check wanting the source's own spelling must read the
 unmutated one, which an earlier coverage check got wrong and matched nothing.
 
+The column is padded to its longest cell, so a new row longer than the rest
+reflows every row in both copies. Word it to fit the existing width where it can,
+and the diff stays one line.
+
 The build fails on a `<placeholder>` in the glossary, because that file ships
 as-is: a placeholder there would reach every session unresolved. Tailored wording
 belongs in `template.md`.
@@ -38,6 +42,11 @@ remember.
 A prefix a project cannot reach is inert by design, not a candidate for removal.
 Adding a row costs nothing anywhere for the same reason, and an unused row settles
 the vocabulary before the workflow that needs it arrives.
+
+A new row reaches past the table: the row count `emotive-setup/SKILL.md` states,
+the prefix character class in `docs/sweep.md`'s row grep, and every paragraph
+listing the prefixes a session rests at or ranks against. Grep for the count and
+for a neighbouring row's emoji before calling the row added.
 
 ## An exception amends every absolute it breaks
 
