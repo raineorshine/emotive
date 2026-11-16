@@ -66,3 +66,17 @@ repo's `ship` skill as step 0 rather than left to the glossary alone.
 `~/.claude/skills/emotive-setup` symlink and no installed plugin gets the skill and
 no glossary — the one combination that reads as the convention being broken. Install
 the plugin; use `--plugin-dir` to try an edit before it ships.
+
+## The inline limit: 10,000 characters
+
+Claude Code puts a hook's stdout in context only while it is under 10,000 UTF-16
+units. Past that the session gets `Output too large … Full output saved to: <file>`
+and a 2KB preview, which for this file is the intro and most of the table and none
+of the rules. Nothing fails visibly: the hook still logs as a success. 0.13.0 grew
+the file from 9,040 to 10,189 units by adding the `🧹 ` row and its paragraph, and
+the first session started on it set no title at all.
+
+`build.sh` refuses a glossary over 9,800, so a new row has to pay for itself by
+tightening wording elsewhere. Splitting the file across two hooks would dodge the
+cap, but nothing here pins down the order they arrive in, and one file read top to bottom is
+what the rules assume.

@@ -51,6 +51,16 @@ if leftover:
 # correct — nothing here has to be padded by hand.
 CONTEXT.write_text("\n".join(lines[:start] + table(head, rows).split("\n") + lines[end:]))
 
+# Claude Code shows a hook's stdout inline only up to 10,000 UTF-16 units; past
+# that every session gets a 2KB preview and a file path instead — the table's
+# first rows and none of the rules. 0.13.0 shipped at 10,189 and no session set
+# a title. Keep a margin so the next row fails here, not in every session.
+LIMIT = 9800
+size = len(CONTEXT.read_text().encode("utf-16-le")) // 2
+if size > LIMIT:
+    raise SystemExit(f"build.sh: injected glossary is {size} UTF-16 units; keep it under {LIMIT} "
+                     "(the hook's inline limit is 10,000) — see docs/hook-injection.md")
+
 # The injected copy code-formats the prefix to keep its trailing space visible,
 # which is what a session setting one needs; the README shows the bare emoji.
 # Different cell widths, so the two tables are padded separately.

@@ -26,8 +26,7 @@ the app cannot know: where the work stands.
 
 The whole glossary applies in every project, including rows for stages a project has no way to
 reach. An unused row is inert — it costs nothing and settles the vocabulary before the workflow that
-needs it arrives, rather than leaving it to be invented under pressure by whichever session gets
-there first.
+needs it arrives.
 
 A project's own instructions may say what its rows mean *here* — which branch `🚀 ` ships to, what
 gate makes a branch `📦 `, which live resource `💾 ` is warning about, which stages a cloud session
@@ -84,14 +83,10 @@ else sets it. The rest are
 set in the response that enters the stage (`set_session_title`, as below), and nothing
 reconciles a title against reality: an abandoned session keeps whatever prefix it had.
 
-**`🧹 ` is housekeeping, not work.** It marks a session spent entirely on the sessions themselves —
-identifying one, finding one, archiving or clearing them, stacking or snoozing them — which may be
-started in a project only so it has the context to tell which sessions are which. It goes on in the
-first response of such a request and rests between turns, since it says what the session was rather
-than naming work in flight, and an organizing session ends there: it has nothing to ship. It is true
-only while nothing has been done to the repo, so it never competes with a prefix that names repo
-work — the first edit, run or ship moves the session to that stage, and a session working on the
-repo that tidies a few sessions along the way keeps its own prefix, `✈️ ` included.
+**`🧹 ` is housekeeping, not work:** a session spent only on organizing sessions, perhaps started in
+a project just for its context. It goes on in the first response and rests between turns, since it
+names what the session was and there is nothing to ship. It holds only until the repo is touched, so
+it never competes with a work prefix; a working session that tidies along the way keeps its own.
 
 **Handing back is itself a stage.** A response that closes on something for the user to do — a
 decision, a credential, a click — is a park, and `🚙 ` goes on before that response, since the idle
@@ -105,17 +100,14 @@ waiting on a decision to build it, and `⏳ ` when that decision comes.
 Precedence, when two could apply: a hazard (`💾 `, `🔍 `, `🔒 `) outranks a park, because the warning
 to other sessions comes before the one to the user, who is already reading the response — handing
 back while a write is still in flight keeps the hazard prefix. A hazard outranks `✈️ ` for the same reason. `🚙 ` outranks `⏲️ `, because a person
-can act and a clock cannot. `🚙 ` outranks `🧹 ` for the same reason: an organizing session that
-closes on a question — which of these to clear — is waiting on the user, and a hazard outranks it as
-it outranks a park. `⏳ ` loses to everything — but a `🚙 ` an earlier turn left is not a
+can act and a clock cannot. A hazard and `🚙 ` both outrank `🧹 `, for the same reasons. `⏳ ` loses to everything — but a `🚙 ` an earlier turn left is not a
 rival claim, so a background run of Claude still replaces it.
 
 **Ask which session this is before renaming one.** `mcp__ccd_session_mgmt__get_session` with
 `"self"` is the answer in the desktop app, and `mcp__claude-code-remote__get_session` with no
 `session_id` (its `ccr.id`) in a cloud session. Either is the only answer, and it changes under a
-fork: a forked session carries the whole
-transcript, the id it read earlier in that transcript, and a different id of its own, so a rename
-that reuses the remembered one retitles the session it forked _from_. A fork also starts in the
+fork: a forked session carries the id it read earlier in the transcript but has a different one of
+its own, so a rename that reuses the remembered one retitles the session it forked _from_. A fork also starts in the
 worktree of the session it forked from, and nothing stops a branch being checked out there, which
 moves that worktree under the other session's feet; put it back on the branch it was on once the
 work has landed.
