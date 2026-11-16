@@ -40,8 +40,10 @@ remember.
 ## Keep the glossary whole
 
 A prefix a project cannot reach is inert by design, not a candidate for removal.
-Adding a row costs nothing anywhere for the same reason, and an unused row settles
-the vocabulary before the workflow that needs it arrives.
+An unused row costs a session nothing, and settles the vocabulary before the workflow
+that needs it arrives — but every row spends part of a fixed budget: the injected file
+has to stay under the hook's inline limit ([hook-injection.md](hook-injection.md)), so a
+row, or a paragraph for it, is paid for by tightening wording elsewhere.
 
 A new row reaches past the table: the row count `emotive-setup/SKILL.md` states,
 the prefix character class in `docs/sweep.md`'s row grep, and every paragraph

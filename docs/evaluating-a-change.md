@@ -38,6 +38,14 @@ the file settles the first question.
 [hook-injection.md](hook-injection.md) has the mechanism, the silent
 `additionalContext` trap, and the alternatives already rejected.
 
+Arrival is also where size bites: past the hook's inline limit the session gets a
+2KB preview and a file path, still logged as a success. A session's transcript
+(`~/.claude/projects/*<session-id>*/*.jsonl`) shows what its `SessionStart` hook
+delivered — grep it for `Output too large` and for the new wording. After a glossary
+release, read the first new session's transcript that way rather than trusting the
+ship. A session supernova runs cannot start `claude -p` (a hook routes it to a new
+card), so there the next card's transcript is the probe.
+
 ## `--ask` cannot be tested unattended
 
 A headless run has nobody to answer the dialog, so `-p` exercises the inferring
