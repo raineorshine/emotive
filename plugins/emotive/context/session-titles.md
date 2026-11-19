@@ -20,7 +20,7 @@ the app cannot know: where the work stands.
 | `🚀 `  | shipped — the push landed; never set while shipping                                         |
 | `🚙 `  | parked: the work is sound and waiting on the user (a decision, a credential, a click)       |
 | `⏲️ `  | waiting on a task scheduled for later — nothing to do until it fires                        |
-| `🧹 `  | organizing the sessions themselves — finding, clearing, stacking or snoozing — not the repo |
+| `🧹 `  | a lookup or housekeeping — a question answered, a search, sessions organized; not repo work |
 | `🪦 `  | dead end — kept for the findings, not to resume                                             |
 | `📚 `  | extracting learnings into the instruction files                                             |
 
@@ -52,7 +52,7 @@ sidebar is there to describe.
 the response is being written; the sidebar is read *between* turns, when nothing is running. So a
 response that finishes what it was doing moves the prefix on before it ends — `📦 ` when the work is
 gated and shippable, `🚙 ` when it closes on something for the user, `🪦 ` when it is abandoned,
-`🧹 ` when all it did was organize sessions.
+`🧹 ` when all it did was look something up or organize sessions.
 `⏳ ` is never what a session rests at: it names work in flight, and between turns there is none.
 
 **A background run of Claude itself is work in flight.** A turn that hands work to a `claude -p`
@@ -83,10 +83,12 @@ else sets it. The rest are
 set in the response that enters the stage (`set_session_title`, as below), and nothing
 reconciles a title against reality: an abandoned session keeps whatever prefix it had.
 
-**`🧹 ` is housekeeping, not work:** a session spent only on organizing sessions, perhaps started in
-a project just for its context. It goes on in the first response and rests between turns, since it
-names what the session was and there is nothing to ship. It holds only until the repo is touched, so
-it never competes with a work prefix; a working session that tidies along the way keeps its own.
+**`🧹 ` is lookup and housekeeping, not work:** a session that only answers a question, finds
+an issue, a card or a past chat, or organizes sessions — often started in a project just for its
+context. It goes on in the first response and rests between turns, since it names what the session
+was and there is nothing to ship. Reading the repo to answer is still a lookup; it holds only until
+the repo is changed, so it never competes with a work prefix, and a working session that tidies or
+looks something up along the way keeps its own.
 
 **Handing back is itself a stage.** A response that closes on something for the user to do — a
 decision, a credential, a click — is a park, and `🚙 ` goes on before that response, since the idle

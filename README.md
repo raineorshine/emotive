@@ -31,7 +31,7 @@ result, and goes on when the push lands.
 | 🚀     | shipped — the push landed; never set while shipping                                         |
 | 🚙     | parked: the work is sound and waiting on the user (a decision, a credential, a click)       |
 | ⏲️     | waiting on a task scheduled for later — nothing to do until it fires                        |
-| 🧹     | organizing the sessions themselves — finding, clearing, stacking or snoozing — not the repo |
+| 🧹     | a lookup or housekeeping — a question answered, a search, sessions organized; not repo work |
 | 🪦     | dead end — kept for the findings, not to resume                                             |
 | 📚     | extracting learnings into the instruction files                                             |
 
