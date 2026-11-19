@@ -39,6 +39,11 @@ remember.
 
 ## Keep the glossary whole
 
+A session whose shape no row plainly names sets no prefix at all, rather than the
+nearest one: a chat that only found an issue and answered stayed bare while `🧹 ` read as
+organizing sessions alone. When a common session shape goes unprefixed, widen the row nearest
+it or add one — the "every title carries one" rule cannot cover a gap in the table.
+
 A prefix a project cannot reach is inert by design, not a candidate for removal.
 An unused row costs a session nothing, and settles the vocabulary before the workflow
 that needs it arrives — but every row spends part of a fixed budget: the injected file

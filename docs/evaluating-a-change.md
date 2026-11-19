@@ -27,6 +27,11 @@ skill is what runs.
 installed plugin loads as well, so a run without the flag is no control — verify an
 edit by making its wording distinctive and checking that wording arrives.
 
+A chat supernova runs cannot start that session itself: a `PreToolUse` hook refuses a nested
+`claude` from Bash and points to `mcp__supernova__start_chat`. Run the check as a new card
+filed under this project with the `--plugin-dir` path in its prompt, rather than shipping on the
+build gate alone.
+
 Arrival and obedience are two checks, and a failure looks the same from outside.
 Ask the session to quote the wording back: that settles whether the hook delivered
 it — and if it did not, check `hooks.json` before the glossary, since a hook emitting
